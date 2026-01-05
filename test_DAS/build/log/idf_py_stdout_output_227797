@@ -1,0 +1,82 @@
+Command: /home/pelvira/.espressif/python_env/idf5.5_py3.12_env/bin/python /home/pelvira/esp/esp-idf/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 /home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/build/test_DAS.elf /home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/build/bootloader/bootloader.elf -m '/home/pelvira/.espressif/python_env/idf5.5_py3.12_env/bin/python' '/home/pelvira/esp/esp-idf/tools/idf.py'
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6380
+ho 0 tail 12 room 4
+load:0x40078000,len:15916
+load:0x40080400,len:3860
+entry 0x40080638
+[0;32mI (29) boot: ESP-IDF v5.5.1 2nd stage bootloader[0m
+[0;32mI (29) boot: compile time Jan  4 2026 13:19:42[0m
+[0;32mI (29) boot: Multicore bootloader[0m
+[0;32mI (31) boot: chip revision: v3.1[0m
+[0;32mI (33) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (37) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (41) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (44) boot: Enabling RNG early entropy source...[0m
+[0;32mI (49) boot: Partition Table:[0m
+[0;32mI (51) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (58) boot:  0 nvs              WiFi data        01 02 00009000 00005000[0m
+[0;32mI (64) boot:  1 otadata          OTA data         01 00 0000e000 00002000[0m
+[0;32mI (71) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (77) boot:  3 ota_0            OTA app          00 10 00110000 00100000[0m
+[0;32mI (84) boot:  4 ota_1            OTA app          00 11 00210000 00100000[0m
+[0;32mI (90) boot: End of partition table[0m
+[0;32mI (94) boot: Defaulting to factory image[0m
+[0;32mI (97) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=14e80h ( 85632) map[0m
+[0;32mI (134) esp_image: segment 1: paddr=00024ea8 vaddr=3ffbdb60 size=04aa8h ( 19112) load[0m
+[0;32mI (141) esp_image: segment 2: paddr=00029958 vaddr=40080000 size=066c0h ( 26304) load[0m
+[0;32mI (152) esp_image: segment 3: paddr=00030020 vaddr=400d0020 size=57d8ch (359820) map[0m
+[0;32mI (275) esp_image: segment 4: paddr=00087db4 vaddr=400866c0 size=12b20h ( 76576) load[0m
+[0;32mI (305) esp_image: segment 5: paddr=0009a8dc vaddr=50000000 size=00020h (    32) load[0m
+[0;32mI (318) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (318) boot: Disabling RNG early entropy source...[0m
+[0;32mI (328) cpu_start: Multicore app[0m
+[0;32mI (337) cpu_start: Pro cpu start user code[0m
+[0;32mI (337) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (337) app_init: Application information:[0m
+[0;32mI (337) app_init: Project name:     test_DAS[0m
+[0;32mI (341) app_init: App version:      1[0m
+[0;32mI (344) app_init: Compile time:     Jan  4 2026 13:19:39[0m
+[0;32mI (349) app_init: ELF file SHA256:  977f82a67...[0m
+[0;32mI (353) app_init: ESP-IDF:          v5.5.1[0m
+[0;32mI (357) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (361) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (365) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (369) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (375) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM[0m
+[0;32mI (380) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM[0m
+[0;32mI (385) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM[0m
+[0;32mI (391) heap_init: At 3FFC5280 len 0001AD80 (107 KiB): DRAM[0m
+[0;32mI (396) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (401) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (407) heap_init: At 400991E0 len 00006E20 (27 KiB): IRAM[0m
+[0;33mW (413) spi_flash: Detected boya flash chip but using generic driver. For optimal functionality, enable `SPI_FLASH_SUPPORT_BOYA_CHIP` in menuconfig[0m
+[0;32mI (425) spi_flash: detected chip: generic[0m
+[0;32mI (429) spi_flash: flash io: dio[0m
+[0;33mW (432) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (442) coexist: coex firmware version: b0bcc39[0m
+[0;32mI (446) main_task: Started on CPU0[0m
+[0;32mI (456) main_task: Calling app_main()[0m
+[0;32mI (456) MAIN: Init OTA[0m
+[0;32mI (456) MAIN: Init Bluetooth[0m
+[0;32mI (456) BTDM_INIT: BT controller compile version [722c907][0m
+[0;32mI (466) BTDM_INIT: Using main XTAL as clock source[0m
+[0;32mI (466) BTDM_INIT: Bluetooth MAC: ec:e3:34:b3:be:72[0m
+[0;32mI (466) phy_init: phy_version 4861,b71b5ad,Aug  5 2025,11:16:06[0m
+[0;32mI (556) phy_init: Saving new calibration data due to checksum failure or outdated calibration data, mode(0)[0m
+[0;32mI (846) MAIN: Init packet manager[0m
+[0;32mI (846) MAIN: Start MPU6050[0m
+[0;32mI (886) NimBLE: Failed to restore IRKs from store; status=8[0m
+
+[0;32mI (896) NimBLE: GAP procedure initiated: advertise; [0m
+[0;32mI (896) NimBLE: disc_mode=2[0m
+[0;32mI (896) NimBLE:  adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0[0m
+[0;32mI (896) NimBLE: [0m
+
+[0;32mI (15276) MAIN: Start pulse sensor[0m
+[0;32mI (15276) main_task: Returned from app_main()[0m
