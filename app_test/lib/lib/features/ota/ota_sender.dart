@@ -56,6 +56,7 @@ class OtaSender {
       seq++;
 
       onProgress(offset / total);
+      await Future.delayed(const Duration(milliseconds: 10));
     }
 
     // --------------------

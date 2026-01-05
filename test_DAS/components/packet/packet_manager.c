@@ -1,5 +1,7 @@
 #include "packet_manager.h"
+#include "ota_manager.h"
 
+#include <stdbool.h>
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -24,6 +26,10 @@ static void packet_reset(uint32_t ts_ms) {
 }
 
 static void packet_flush(void) {
+  if (ota_manager_is_active()) {
+    return;
+  }
+
   packet_item_t item;
   memcpy(&item.pkt, &s_work_pkt, sizeof(packet_t));
   xQueueSend(s_queue, &item, 0);
@@ -34,6 +40,11 @@ static void packet_task(void *arg) {
 
   while (1) {
     if (xQueueReceive(s_queue, &item, portMAX_DELAY)) {
+
+      if (ota_manager_is_active()) {
+        continue;
+      }
+
       if (s_tx_cb) {
         s_tx_cb((const uint8_t *)&item.pkt, sizeof(packet_t));
       }

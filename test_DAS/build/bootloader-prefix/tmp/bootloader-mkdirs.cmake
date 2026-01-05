@@ -5,18 +5,18 @@ cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
   "/home/pelvira/esp/esp-idf/components/bootloader/subproject"
-  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/build/bootloader"
-  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/build/bootloader-prefix"
-  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/build/bootloader-prefix/tmp"
-  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/build/bootloader-prefix/src/bootloader-stamp"
-  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/build/bootloader-prefix/src"
-  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/build/bootloader-prefix/src/bootloader-stamp"
+  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/bootloader"
+  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/bootloader-prefix"
+  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/bootloader-prefix/tmp"
+  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/bootloader-prefix/src/bootloader-stamp"
+  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/bootloader-prefix/src"
+  "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

@@ -1,4 +1,4 @@
-# Install script for directory: /home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_DAS/components/hw
+# Install script for directory: /home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/components/hw
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

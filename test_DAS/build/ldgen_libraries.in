@@ -159,11 +159,11 @@ $<TARGET_FILE:idf::rt>
 $<TARGET_FILE:idf::spiffs>
 $<TARGET_FILE:idf::wifi_provisioning>
 $<TARGET_FILE:__idf_json>
-$<TARGET_FILE:idf::ota>
 $<TARGET_FILE:idf::ble>
 $<TARGET_FILE:__idf_ota>
-$<TARGET_FILE:idf::packet>
 $<TARGET_FILE:__idf_ble>
+$<TARGET_FILE:idf::ota>
+$<TARGET_FILE:idf::packet>
 $<TARGET_FILE:idf::hw>
 $<TARGET_FILE:__idf_packet>
 $<TARGET_FILE:idf::sensor_test>

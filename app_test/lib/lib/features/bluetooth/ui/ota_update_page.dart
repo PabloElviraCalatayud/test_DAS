@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../../../data/bluetooth/manager/ble_manager.dart';
+import '../../ota/ota_sender.dart';
+
 class OtaUpdatePage extends StatefulWidget {
   const OtaUpdatePage({super.key});
 
@@ -12,6 +15,8 @@ class OtaUpdatePage extends StatefulWidget {
 
 class _OtaUpdatePageState extends State<OtaUpdatePage> {
   File? _file;
+  double _progress = 0.0;
+  bool _sending = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +27,9 @@ class _OtaUpdatePageState extends State<OtaUpdatePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+
             ElevatedButton(
-              onPressed: _pickFile,
+              onPressed: _sending ? null : _pickFile,
               child: const Text('Seleccionar archivo .bin'),
             ),
 
@@ -37,10 +43,17 @@ class _OtaUpdatePageState extends State<OtaUpdatePage> {
 
             const SizedBox(height: 24),
 
+            LinearProgressIndicator(
+              value: _sending ? _progress : null,
+              minHeight: 8,
+            ),
+
+            const SizedBox(height: 24),
+
             ElevatedButton.icon(
               icon: const Icon(Icons.upload),
-              label: const Text('Enviar firmware'),
-              onPressed: _file != null
+              label: Text(_sending ? 'Enviando…' : 'Enviar firmware'),
+              onPressed: (_file != null && !_sending)
                   ? _sendFirmware
                   : null,
             ),
@@ -50,6 +63,9 @@ class _OtaUpdatePageState extends State<OtaUpdatePage> {
     );
   }
 
+  // ------------------------------------------------
+  // FILE PICKER
+  // ------------------------------------------------
   Future<void> _pickFile() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -63,15 +79,54 @@ class _OtaUpdatePageState extends State<OtaUpdatePage> {
     }
   }
 
-  void _sendFirmware() {
-    // AQUÍ irá la llamada al OtaSender
-    // Ejemplo futuro:
-    // OtaSender(BleManager.instance.writeChar!).sendFirmware(_file!, ...);
+  // ------------------------------------------------
+  // OTA SEND
+  // ------------------------------------------------
+  Future<void> _sendFirmware() async {
+    final writeChar = BleManager.instance.writeChar;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Envío OTA aún no conectado'),
-      ),
-    );
+    if (writeChar == null || _file == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('BLE no preparado')),
+      );
+      return;
+    }
+
+    setState(() {
+      _sending = true;
+      _progress = 0.0;
+    });
+
+    try {
+      final sender = OtaSender(writeChar);
+
+      await sender.sendFirmware(
+        _file!,
+            (p) {
+          setState(() {
+            _progress = p;
+          });
+        },
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('OTA completada, reiniciando dispositivo')),
+        );
+      }
+
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error OTA: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _sending = false;
+        });
+      }
+    }
   }
 }

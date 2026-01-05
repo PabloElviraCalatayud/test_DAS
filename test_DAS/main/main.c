@@ -13,20 +13,12 @@
 
 static const char *TAG = "MAIN";
 
-/* --------------------------------------------------
- * BLE TX queue
- * -------------------------------------------------- */
-
 typedef struct {
   uint16_t len;
   uint8_t data[247];
 } ble_packet_t;
 
-static QueueHandle_t ble_tx_queue;
-
-/* --------------------------------------------------
- * BLE TX task (ÚNICO punto donde se hace notify)
- * -------------------------------------------------- */
+QueueHandle_t ble_tx_queue;
 
 static void ble_tx_task(void *arg) {
   ble_packet_t pkt;
@@ -34,33 +26,39 @@ static void ble_tx_task(void *arg) {
   while (1) {
     if (xQueueReceive(ble_tx_queue, &pkt, portMAX_DELAY)) {
       bluetooth_notify(pkt.data, pkt.len);
-      vTaskDelay(pdMS_TO_TICKS(30));
+      vTaskDelay(pdMS_TO_TICKS(10));
     }
   }
 }
 
-/* --------------------------------------------------
- * Packet manager callback (NO hace BLE)
- * -------------------------------------------------- */
 
 static void ble_tx_cb(const uint8_t *data, uint16_t len) {
-  if (len != 88) {
-    ESP_LOGW("BLE", "Invalid packet size: %d", len);
+  if (ota_manager_is_active()) {
     return;
   }
 
-  bluetooth_notify(data, len);
-}
+  ble_packet_t pkt;
 
-/* --------------------------------------------------
- * Sensor / packet feed task
- * -------------------------------------------------- */
+  if (len > sizeof(pkt.data)) {
+    return;
+  }
+
+  pkt.len = len;
+  memcpy(pkt.data, data, len);
+
+  xQueueSend(ble_tx_queue, &pkt, 0);
+}
 
 static void log_task(void *arg) {
   mpu6050_raw_t imu_raw;
   mpu6050_data_t imu_conv;
 
   while (1) {
+    if (ota_manager_is_active()) {
+      vTaskDelay(pdMS_TO_TICKS(50));
+      continue;
+    }
+
     uint32_t ts_ms = esp_timer_get_time() / 1000ULL;
 
     uint16_t pulse_raw = pulse_sensor_get_raw();
@@ -83,10 +81,6 @@ static void log_task(void *arg) {
     vTaskDelay(pdMS_TO_TICKS(20));
   }
 }
-
-/* --------------------------------------------------
- * app_main
- * -------------------------------------------------- */
 
 void app_main(void) {
   ESP_LOGI(TAG, "Init OTA");
@@ -112,11 +106,9 @@ void app_main(void) {
 
   ESP_LOGI(TAG, "Start MPU6050");
   mpu6050_start(
-    I2C_NUM_0,
     GPIO_NUM_21,
     GPIO_NUM_22,
-    400000,
-    20,
+    100000,
     4096,
     5
   );

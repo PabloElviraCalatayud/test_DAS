@@ -24,6 +24,7 @@ static uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE;
 static uint16_t tx_handle;
 static uint8_t own_addr_type;
 static bool notify_enabled = false;
+static volatile bool notify_busy = false;
 
 static ble_uuid128_t svc_uuid = BLE_UUID128_INIT(
   0x01,0x00,0x00,0x00,
@@ -63,7 +64,6 @@ static int chr_tx_access_cb(
 ) {
   if (ctxt->op == BLE_GATT_ACCESS_OP_WRITE_CHR) {
     notify_enabled = true;
-    ESP_LOGI(TAG, "Notify enabled");
   }
   return 0;
 }
@@ -116,7 +116,7 @@ static int gap_event_cb(
       if (event->connect.status == 0) {
         conn_handle = event->connect.conn_handle;
         notify_enabled = false;
-        ESP_LOGI(TAG, "Connected");
+        notify_busy = false;
       } else {
         ble_advertise();
       }
@@ -125,23 +125,21 @@ static int gap_event_cb(
     case BLE_GAP_EVENT_DISCONNECT:
       conn_handle = BLE_HS_CONN_HANDLE_NONE;
       notify_enabled = false;
-      ESP_LOGI(TAG, "Disconnected");
+      notify_busy = false;
       ble_advertise();
       break;
 
     case BLE_GAP_EVENT_SUBSCRIBE:
       if (event->subscribe.attr_handle == tx_handle) {
         notify_enabled = event->subscribe.cur_notify;
-        ESP_LOGI(
-          TAG,
-          "Notify %s",
-          notify_enabled ? "ENABLED" : "DISABLED"
-        );
       }
       break;
 
+    case BLE_GAP_EVENT_NOTIFY_TX:
+      notify_busy = false;
+      break;
+
     case BLE_GAP_EVENT_MTU:
-      ESP_LOGI(TAG, "MTU %d", event->mtu.value);
       break;
 
     default:
@@ -210,11 +208,11 @@ void bluetooth_init(void) {
   nimble_port_freertos_init(ble_host_task);
 }
 
-
 int bluetooth_notify(const uint8_t *data, uint16_t len) {
   if (conn_handle == BLE_HS_CONN_HANDLE_NONE ||
       tx_handle == 0 ||
-      !notify_enabled) {
+      !notify_enabled ||
+      notify_busy) {
     return -1;
   }
 
@@ -223,10 +221,18 @@ int bluetooth_notify(const uint8_t *data, uint16_t len) {
     return -1;
   }
 
-  return ble_gatts_notify_custom(
+  notify_busy = true;
+
+  int rc = ble_gatts_notify_custom(
     conn_handle,
     tx_handle,
     om
   );
+
+  if (rc != 0) {
+    notify_busy = false;
+  }
+
+  return rc;
 }
 
