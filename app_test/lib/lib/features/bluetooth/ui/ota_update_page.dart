@@ -27,35 +27,27 @@ class _OtaUpdatePageState extends State<OtaUpdatePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-
             ElevatedButton(
               onPressed: _sending ? null : _pickFile,
               child: const Text('Seleccionar archivo .bin'),
             ),
-
             const SizedBox(height: 16),
-
             if (_file != null)
               Text(
                 _file!.path.split('/').last,
                 textAlign: TextAlign.center,
               ),
-
             const SizedBox(height: 24),
-
             LinearProgressIndicator(
               value: _sending ? _progress : null,
               minHeight: 8,
             ),
-
             const SizedBox(height: 24),
-
             ElevatedButton.icon(
               icon: const Icon(Icons.upload),
               label: Text(_sending ? 'Enviando…' : 'Enviar firmware'),
-              onPressed: (_file != null && !_sending)
-                  ? _sendFirmware
-                  : null,
+              onPressed:
+              (_file != null && !_sending) ? _sendFirmware : null,
             ),
           ],
         ),
@@ -63,9 +55,6 @@ class _OtaUpdatePageState extends State<OtaUpdatePage> {
     );
   }
 
-  // ------------------------------------------------
-  // FILE PICKER
-  // ------------------------------------------------
   Future<void> _pickFile() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -79,16 +68,12 @@ class _OtaUpdatePageState extends State<OtaUpdatePage> {
     }
   }
 
-  // ------------------------------------------------
-  // OTA SEND
-  // ------------------------------------------------
   Future<void> _sendFirmware() async {
-    final writeChar = BleManager.instance.writeChar;
+    final ble = BleManager.instance;
+    final writeChar = ble.writeChar;
+    final notifyChar = ble.notifyChar;
 
-    if (writeChar == null || _file == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('BLE no preparado')),
-      );
+    if (writeChar == null || notifyChar == null || _file == null) {
       return;
     }
 
@@ -98,7 +83,9 @@ class _OtaUpdatePageState extends State<OtaUpdatePage> {
     });
 
     try {
-      final sender = OtaSender(writeChar);
+      await ble.startOtaMode();
+
+      final sender = OtaSender(writeChar, notifyChar);
 
       await sender.sendFirmware(
         _file!,
@@ -108,20 +95,8 @@ class _OtaUpdatePageState extends State<OtaUpdatePage> {
           });
         },
       );
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('OTA completada, reiniciando dispositivo')),
-        );
-      }
-
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error OTA: $e')),
-        );
-      }
     } finally {
+      await ble.endOtaMode();
       if (mounted) {
         setState(() {
           _sending = false;

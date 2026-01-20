@@ -1,32 +1,69 @@
 import 'dart:typed_data';
 
-class OtaCmd {
-  static const int start = 0x01;
-  static const int data  = 0x02;
-  static const int end   = 0x03;
-  static const int abort = 0x04;
+enum OtaCmd {
+  start(0x01),
+  data(0x02),
+  end(0x03),
+  ack(0x80),
+  nack(0x81);
+
+  const OtaCmd(this.value);
+  final int value;
+
+  static OtaCmd fromValue(int v) {
+    return OtaCmd.values.firstWhere(
+          (e) => e.value == v,
+      orElse: () => throw Exception('Unknown OtaCmd 0x${v.toRadixString(16)}'),
+    );
+  }
 }
 
 class OtaPacket {
+  OtaPacket({
+    required this.cmd,
+    required this.seq,
+    this.payload,
+  });
+
+  final OtaCmd cmd;
+  final int seq;
+  final Uint8List? payload;
+
   static Uint8List build({
-    required int cmd,
+    required OtaCmd cmd,
     required int seq,
     Uint8List? payload,
   }) {
-    payload ??= Uint8List(0);
+    final payloadLen = payload?.length ?? 0;
+    final buf = Uint8List(5 + payloadLen);
+    final bd = ByteData.view(buf.buffer);
 
-    final len = payload.length;
-    final buffer = BytesBuilder();
+    bd.setUint8(0, cmd.value);
+    bd.setUint16(1, seq, Endian.little);
+    bd.setUint16(3, payloadLen, Endian.little);
 
-    buffer.addByte(cmd);
+    if (payloadLen > 0) {
+      buf.setRange(5, 5 + payloadLen, payload!);
+    }
 
-    final bd = ByteData(4);
-    bd.setUint16(0, seq, Endian.little);
-    bd.setUint16(2, len, Endian.little);
+    return buf;
+  }
 
-    buffer.add(bd.buffer.asUint8List());
-    buffer.add(payload);
+  static OtaPacket parse(Uint8List data) {
+    if (data.length < 5) {
+      throw Exception('OTA packet too short (${data.length})');
+    }
 
-    return buffer.toBytes();
+    final bd = ByteData.view(data.buffer);
+    final cmd = OtaCmd.fromValue(bd.getUint8(0));
+    final seq = bd.getUint16(1, Endian.little);
+    final len = bd.getUint16(3, Endian.little);
+
+    Uint8List? payload;
+    if (len > 0) {
+      payload = data.sublist(5, 5 + len);
+    }
+
+    return OtaPacket(cmd: cmd, seq: seq, payload: payload);
   }
 }

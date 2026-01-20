@@ -129,7 +129,7 @@ class BleScanPage extends StatelessWidget {
           const SizedBox(height: 12),
           OutlinedButton(
             onPressed: () async {
-              await ble.disconnect();
+              //await ble.disconnect();
             },
             child: const Text('Desconectar'),
           ),

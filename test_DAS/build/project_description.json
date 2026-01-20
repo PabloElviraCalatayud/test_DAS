@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "test_DAS",
-    "project_version":    "fd015da-dirty",
+    "project_version":    "aa7c072-dirty",
     "project_path":       "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS",
     "idf_path":           "/home/pelvira/esp/esp-idf",
     "build_dir":          "/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build",

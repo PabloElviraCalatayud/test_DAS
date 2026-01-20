@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import '../../../core/constants/ble_constants.dart';
 import '../../../features/packet/logic/packet_decoder.dart';
+import '../../../features/ota/ota_sender.dart';
 
 enum BleConnectionState {
   idle,
@@ -23,26 +23,24 @@ class BleManager {
   BluetoothCharacteristic? _writeChar;
 
   BluetoothCharacteristic? get writeChar => _writeChar;
+  BluetoothCharacteristic? get notifyChar => _notifyChar;
 
   BleConnectionState _state = BleConnectionState.idle;
-
   final StreamController<BleConnectionState> _stateCtrl =
   StreamController.broadcast();
 
   Stream<BleConnectionState> get stateStream => _stateCtrl.stream;
   BleConnectionState get state => _state;
 
+  bool _otaActive = false;
+
   void _setState(BleConnectionState s) {
     _state = s;
     _stateCtrl.add(s);
   }
 
-  // ------------------------------------------------
-  // SCAN
-  // ------------------------------------------------
   void scan() {
     FlutterBluePlus.stopScan();
-
     _setState(BleConnectionState.scanning);
 
     FlutterBluePlus.startScan(
@@ -51,9 +49,6 @@ class BleManager {
     );
   }
 
-  // ------------------------------------------------
-  // CONNECT
-  // ------------------------------------------------
   Future<void> connect(BluetoothDevice device) async {
     if (_state == BleConnectionState.connecting ||
         _state == BleConnectionState.connected) {
@@ -61,16 +56,10 @@ class BleManager {
     }
 
     _setState(BleConnectionState.connecting);
-
     FlutterBluePlus.stopScan();
 
-    try {
-      await device.disconnect();
-    } catch (_) {}
-
-    try {
-      await device.removeBond();
-    } catch (_) {}
+    try { await device.disconnect(); } catch (_) {}
+    try { await device.removeBond(); } catch (_) {}
 
     await device.connect(
       autoConnect: false,
@@ -89,21 +78,6 @@ class BleManager {
     _setState(BleConnectionState.connected);
   }
 
-  Future<void> disconnect() async {
-    try {
-      await connectedDevice?.disconnect();
-    } catch (_) {}
-
-    connectedDevice = null;
-    _notifyChar = null;
-    _writeChar = null;
-
-    _setState(BleConnectionState.idle);
-  }
-
-  // ------------------------------------------------
-  // DISCOVER
-  // ------------------------------------------------
   Future<void> _discoverCharacteristics() async {
     final services = await connectedDevice!.discoverServices();
 
@@ -130,22 +104,24 @@ class BleManager {
       throw Exception('TX/RX characteristics not found');
     }
 
-    await _enableNotifications();
-  }
-
-  // ------------------------------------------------
-  // NOTIFICATIONS
-  // ------------------------------------------------
-  Future<void> _enableNotifications() async {
-    if (_notifyChar == null) {
-      throw Exception('Notify characteristic not set');
-    }
-
     await _notifyChar!.setNotifyValue(true);
 
-    _notifyChar!.value.listen((data) {
-      debugPrint('RX chunk: ${data.length} bytes');
-      PacketDecoder.instance.decode(Uint8List.fromList(data));
+    _notifyChar!.lastValueStream.listen((data) {
+      final bytes = Uint8List.fromList(data);
+
+      if (_otaActive) {
+        OtaSender.handleNotify(bytes);
+      } else {
+        PacketDecoder.instance.decode(bytes);
+      }
     });
+  }
+
+  Future<void> startOtaMode() async {
+    _otaActive = true;
+  }
+
+  Future<void> endOtaMode() async {
+    _otaActive = false;
   }
 }
