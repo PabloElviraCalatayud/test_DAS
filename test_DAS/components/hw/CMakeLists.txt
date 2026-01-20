@@ -12,5 +12,7 @@ idf_component_register(
     esp_adc
     packet
     esp_driver_i2c
+    system
+    sensor_manager
 )
 

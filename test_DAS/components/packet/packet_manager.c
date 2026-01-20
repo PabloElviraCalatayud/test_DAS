@@ -1,11 +1,13 @@
 #include "packet_manager.h"
-#include "ota_manager.h"
+#include "system_state.h"
 
 #include <stdbool.h>
 #include <string.h>
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
+
 #include "esp_timer.h"
 
 #define PACKET_QUEUE_LEN 4
@@ -26,7 +28,7 @@ static void packet_reset(uint32_t ts_ms) {
 }
 
 static void packet_flush(void) {
-  if (ota_manager_is_active()) {
+  if (!system_is_running()) {
     return;
   }
 
@@ -41,7 +43,7 @@ static void packet_task(void *arg) {
   while (1) {
     if (xQueueReceive(s_queue, &item, portMAX_DELAY)) {
 
-      if (ota_manager_is_active()) {
+      if (!system_is_running()) {
         continue;
       }
 
@@ -55,6 +57,10 @@ static void packet_task(void *arg) {
 static void packet_flush_task(void *arg) {
   while (1) {
     vTaskDelay(pdMS_TO_TICKS(20));
+
+    if (!system_is_running()) {
+      continue;
+    }
 
     uint32_t ts_ms = esp_timer_get_time() / 1000ULL;
 
@@ -77,8 +83,23 @@ esp_err_t packet_manager_init(packet_tx_cb_t tx_cb) {
 
   packet_reset(esp_timer_get_time() / 1000ULL);
 
-  xTaskCreate(packet_task, "packet_task", 4096, NULL, 5, NULL);
-  xTaskCreate(packet_flush_task, "packet_flush_task", 2048, NULL, 4, NULL);
+  xTaskCreate(
+    packet_task,
+    "packet_task",
+    4096,
+    NULL,
+    5,
+    NULL
+  );
+
+  xTaskCreate(
+    packet_flush_task,
+    "packet_flush_task",
+    2048,
+    NULL,
+    4,
+    NULL
+  );
 
   return ESP_OK;
 }
@@ -88,6 +109,10 @@ int packet_feed_imu_raw(
   int16_t gx, int16_t gy, int16_t gz,
   uint32_t ts_ms
 ) {
+  if (!system_is_running()) {
+    return -1;
+  }
+
   if (s_work_pkt.header.imu_count < PACKET_IMU_MAX) {
     uint8_t i = s_work_pkt.header.imu_count;
 
@@ -105,6 +130,10 @@ int packet_feed_imu_raw(
 }
 
 int packet_feed_pulse_raw(uint16_t pulse, uint32_t ts_ms) {
+  if (!system_is_running()) {
+    return -1;
+  }
+
   if (s_work_pkt.header.pulse_count < PACKET_PULSE_MAX) {
     uint8_t i = s_work_pkt.header.pulse_count;
     s_work_pkt.pulse[i] = pulse;

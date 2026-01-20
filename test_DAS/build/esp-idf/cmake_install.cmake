@@ -559,12 +559,12 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/esp-idf/ble/cmake_install.cmake")
+  include("/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/esp-idf/system/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/esp-idf/ota/cmake_install.cmake")
+  include("/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/esp-idf/ble/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
@@ -575,6 +575,16 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
   include("/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/esp-idf/hw/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/esp-idf/sensor_manager/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/esp-idf/ota/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)

@@ -1,6 +1,10 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/queue.h"
+
 #include "esp_log.h"
 #include "nvs_flash.h"
 #include "esp_nimble_hci.h"
@@ -10,7 +14,6 @@
 
 #include "host/ble_hs.h"
 #include "host/ble_att.h"
-#include "host/util/util.h"
 
 #include "services/gap/ble_svc_gap.h"
 #include "services/gatt/ble_svc_gatt.h"
@@ -20,11 +23,17 @@
 
 static const char *TAG = "BLE";
 
+typedef struct {
+  uint16_t len;
+  uint8_t data[247];
+} ble_packet_t;
+
+QueueHandle_t ble_tx_queue;
+
 static uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE;
 static uint16_t tx_handle;
 static uint8_t own_addr_type;
 static bool notify_enabled = false;
-static volatile bool notify_busy = false;
 
 static ble_uuid128_t svc_uuid = BLE_UUID128_INIT(
   0x01,0x00,0x00,0x00,
@@ -62,9 +71,6 @@ static int chr_tx_access_cb(
   struct ble_gatt_access_ctxt *ctxt,
   void *arg
 ) {
-  if (ctxt->op == BLE_GATT_ACCESS_OP_WRITE_CHR) {
-    notify_enabled = true;
-  }
   return 0;
 }
 
@@ -74,10 +80,7 @@ static int chr_rx_access_cb(
   struct ble_gatt_access_ctxt *ctxt,
   void *arg
 ) {
-  ota_manager_handle_packet(
-    ctxt->om->om_data,
-    ctxt->om->om_len
-  );
+  ota_manager_handle_packet(ctxt->om->om_data, ctxt->om->om_len);
   return 0;
 }
 
@@ -95,8 +98,7 @@ static const struct ble_gatt_svc_def gatt_svcs[] = {
       {
         .uuid = &chr_rx_uuid.u,
         .access_cb = chr_rx_access_cb,
-        .flags = BLE_GATT_CHR_F_WRITE |
-                 BLE_GATT_CHR_F_WRITE_NO_RSP,
+        .flags = BLE_GATT_CHR_F_WRITE | BLE_GATT_CHR_F_WRITE_NO_RSP,
       },
       { 0 }
     },
@@ -106,17 +108,14 @@ static const struct ble_gatt_svc_def gatt_svcs[] = {
 
 static void ble_advertise(void);
 
-static int gap_event_cb(
-  struct ble_gap_event *event,
-  void *arg
-) {
+static int gap_event_cb(struct ble_gap_event *event, void *arg) {
   switch (event->type) {
 
     case BLE_GAP_EVENT_CONNECT:
       if (event->connect.status == 0) {
         conn_handle = event->connect.conn_handle;
         notify_enabled = false;
-        notify_busy = false;
+        ESP_LOGI(TAG, "Connected");
       } else {
         ble_advertise();
       }
@@ -125,21 +124,15 @@ static int gap_event_cb(
     case BLE_GAP_EVENT_DISCONNECT:
       conn_handle = BLE_HS_CONN_HANDLE_NONE;
       notify_enabled = false;
-      notify_busy = false;
+      ESP_LOGI(TAG, "Disconnected");
       ble_advertise();
       break;
 
     case BLE_GAP_EVENT_SUBSCRIBE:
       if (event->subscribe.attr_handle == tx_handle) {
         notify_enabled = event->subscribe.cur_notify;
+        ESP_LOGI(TAG, "Notify %s", notify_enabled ? "ENABLED" : "DISABLED");
       }
-      break;
-
-    case BLE_GAP_EVENT_NOTIFY_TX:
-      notify_busy = false;
-      break;
-
-    case BLE_GAP_EVENT_MTU:
       break;
 
     default:
@@ -185,6 +178,20 @@ static void ble_host_task(void *param) {
   nimble_port_freertos_deinit();
 }
 
+static void ble_tx_task(void *arg) {
+  ble_packet_t pkt;
+
+  while (1) {
+    if (xQueueReceive(ble_tx_queue, &pkt, portMAX_DELAY)) {
+      if (bluetooth_notify(pkt.data, pkt.len) == 0) {
+        vTaskDelay(pdMS_TO_TICKS(15));
+      } else {
+        vTaskDelay(pdMS_TO_TICKS(30));
+      }
+    }
+  }
+}
+
 void bluetooth_init(void) {
   esp_err_t ret = nvs_flash_init();
   if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -192,11 +199,12 @@ void bluetooth_init(void) {
     nvs_flash_init();
   }
 
+  ble_tx_queue = xQueueCreate(8, sizeof(ble_packet_t));
+
   esp_nimble_hci_init();
   nimble_port_init();
 
   ble_att_set_preferred_mtu(247);
-
   ble_hs_cfg.sync_cb = ble_on_sync;
 
   ble_gatts_count_cfg(gatt_svcs);
@@ -206,13 +214,21 @@ void bluetooth_init(void) {
   ble_svc_gatt_init();
 
   nimble_port_freertos_init(ble_host_task);
+
+  xTaskCreate(
+    ble_tx_task,
+    "ble_tx",
+    4096,
+    NULL,
+    5,
+    NULL
+  );
 }
 
 int bluetooth_notify(const uint8_t *data, uint16_t len) {
   if (conn_handle == BLE_HS_CONN_HANDLE_NONE ||
       tx_handle == 0 ||
-      !notify_enabled ||
-      notify_busy) {
+      !notify_enabled) {
     return -1;
   }
 
@@ -221,18 +237,18 @@ int bluetooth_notify(const uint8_t *data, uint16_t len) {
     return -1;
   }
 
-  notify_busy = true;
+  return ble_gatts_notify_custom(conn_handle, tx_handle, om);
+}
 
-  int rc = ble_gatts_notify_custom(
-    conn_handle,
-    tx_handle,
-    om
-  );
-
-  if (rc != 0) {
-    notify_busy = false;
+bool bluetooth_tx_enqueue(const uint8_t *data, uint16_t len) {
+  if (!ble_tx_queue || len > 247) {
+    return false;
   }
 
-  return rc;
+  ble_packet_t pkt;
+  pkt.len = len;
+  memcpy(pkt.data, data, len);
+
+  return xQueueSend(ble_tx_queue, &pkt, 0) == pdTRUE;
 }
 

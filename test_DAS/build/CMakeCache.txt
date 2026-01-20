@@ -350,7 +350,7 @@ Mbed TLS_IS_TOP_LEVEL:STATIC=OFF
 Mbed TLS_SOURCE_DIR:STATIC=/home/pelvira/esp/esp-idf/components/mbedtls/mbedtls
 
 //No help, variable specified on the command line.
-PYTHON:UNINITIALIZED=/home/pelvira/.espressif/python_env/idf5.5_py3.12_env/bin/python
+PYTHON:UNINITIALIZED=/home/pelvira/.espressif/python_env/idf5.5_py3.10_env/bin/python
 
 //No help, variable specified on the command line.
 PYTHON_DEPS_CHECKED:UNINITIALIZED=1
@@ -543,7 +543,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=124
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=126
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -593,7 +593,7 @@ C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS:INTERNAL=1
 //Details about finding Git
 FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[/usr/bin/git][v2.43.0()]
 //Details about finding Python3
-FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[/home/pelvira/.espressif/python_env/idf5.5_py3.12_env/bin/python][cfound components: Interpreter ][v3.12.3()]
+FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[/home/pelvira/.espressif/python_env/idf5.5_py3.10_env/bin/python][cfound components: Interpreter ][v3.10.13()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //ADVANCED property for variable: GIT_EXECUTABLE
@@ -604,10 +604,10 @@ _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=/usr/local
 _Python3_Compiler_REASON_FAILURE:INTERNAL=
 //Development reason failure
 _Python3_Development_REASON_FAILURE:INTERNAL=
-_Python3_EXECUTABLE:INTERNAL=/home/pelvira/.espressif/python_env/idf5.5_py3.12_env/bin/python
+_Python3_EXECUTABLE:INTERNAL=/home/pelvira/.espressif/python_env/idf5.5_py3.10_env/bin/python
 //Python3 Properties
-_Python3_INTERPRETER_PROPERTIES:INTERNAL=Python;3;12;3;32;64;;;abi3;/usr/lib/python3.12;/home/pelvira/.espressif/python_env/idf5.5_py3.12_env/lib/python3.12;/home/pelvira/.espressif/python_env/idf5.5_py3.12_env/lib/python3.12/site-packages;/home/pelvira/.espressif/python_env/idf5.5_py3.12_env/lib/python3.12/site-packages
-_Python3_INTERPRETER_SIGNATURE:INTERNAL=6f371e0514bdea1048067b5cf63a1d23
+_Python3_INTERPRETER_PROPERTIES:INTERNAL=Python;3;10;13;32;64;;;abi3;/home/pelvira/.pyenv/versions/3.10.13/lib/python3.10;/home/pelvira/.espressif/python_env/idf5.5_py3.10_env/lib/python3.10;/home/pelvira/.espressif/python_env/idf5.5_py3.10_env/lib/python3.10/site-packages;/home/pelvira/.espressif/python_env/idf5.5_py3.10_env/lib/python3.10/site-packages
+_Python3_INTERPRETER_SIGNATURE:INTERNAL=19df66646e5578e8773a05520ece9b77
 //NumPy reason failure
 _Python3_NumPy_REASON_FAILURE:INTERNAL=
 

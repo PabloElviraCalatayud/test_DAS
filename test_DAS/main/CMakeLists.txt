@@ -10,5 +10,7 @@ idf_component_register(
     sensor_test
     packet
     freertos
+    system
+    sensor_manager
 )
 

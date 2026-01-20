@@ -7,5 +7,6 @@ idf_component_register(
     ble
     freertos
     esp_timer
+    system
 )
 
