@@ -36,36 +36,24 @@ esp_err_t sensor_manager_init(void) {
 }
 
 void sensor_manager_start(void) {
-  if (s_running) {
-    return;
-  }
+  if (s_running) return;
 
-  ESP_LOGI(TAG, "Starting sensors");
+  ESP_LOGI(TAG, "Starting MPU6050");
+  mpu6050_start(GPIO_NUM_21, GPIO_NUM_22, 100000, 4096, 3, &s_mpu_task);
 
-  mpu6050_start(
-    GPIO_NUM_21,
-    GPIO_NUM_22,
-    100000,
-    4096,
-    4,
-    &s_mpu_task
-  );
-
+  ESP_LOGI(TAG, "Starting pulse sensor");
   pulse_sensor_start(&s_pulse_task);
 
   s_running = true;
 }
 
 void sensor_manager_stop(void) {
-  if (!s_running) {
-    return;
-  }
+  if (!s_running) return;
 
-  ESP_LOGI(TAG, "Stopping sensors");
+  ESP_LOGW(TAG, "Stopping sensors");
 
   mpu6050_stop();
   pulse_sensor_stop();
 
   s_running = false;
 }
-

@@ -3,7 +3,4 @@ Command: /home/pelvira/.espressif/python_env/idf5.5_py3.10_env/bin/python /home/
 [0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
 [0m--- 0x40080400: [0;33m_invalid_pc_placeholder[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m2235[0m
 [0m--- 0x40080638: [0;33mcall_start_cpu0[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/bootloader/subproject/main/bootloader_start.c[0m[0m:[1;31m25[0m
-[0m--- 0x40080400: [0;33m_invalid_pc_placeholder[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m2235[0m
-[0m--- 0x40080638: [0;33mcall_start_cpu0[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/bootloader/subproject/main/bootloader_start.c[0m[0m:[1;31m25[0m
-[0;33m--- Warning: Checksum mismatch between flashed and built applications. Checksum of built application is ada7bfa5013187f8f478207d901fe46eacb847d922d70000c3c95b36795e5719[0m
 [0m

@@ -4,27 +4,69 @@
 #include "freertos/task.h"
 
 #include "driver/i2c.h"
+#include "esp_log.h"
+#include "esp_timer.h"
 
-static TaskHandle_t s_task = NULL;
-static i2c_port_t s_port;
-static uint32_t s_period_ms;
-static bool s_running = false;
+#include "packet_manager.h"
+#include "system_state.h"
+
+#define MPU_ADDR        0x68
+#define REG_PWR_MGMT_1  0x6B
+#define REG_ACCEL_XOUT  0x3B
+#define REG_WHO_AM_I    0x75
+
+static const char *TAG = "MPU";
+
+static TaskHandle_t s_task;
+static i2c_port_t s_port = I2C_NUM_1;
+static volatile bool s_running;
+
+static esp_err_t mpu_write(uint8_t reg, uint8_t val) {
+  uint8_t buf[2] = { reg, val };
+  return i2c_master_write_to_device(s_port, MPU_ADDR, buf, 2, pdMS_TO_TICKS(50));
+}
+
+static esp_err_t mpu_read(uint8_t reg, uint8_t *data, size_t len) {
+  return i2c_master_write_read_device(
+    s_port,
+    MPU_ADDR,
+    &reg,
+    1,
+    data,
+    len,
+    pdMS_TO_TICKS(50)
+  );
+}
 
 static void mpu6050_task(void *arg) {
+  uint8_t raw[14];
+
   while (s_running) {
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    if (cmd) {
-      i2c_master_start(cmd);
-      i2c_master_stop(cmd);
-      i2c_master_cmd_begin(s_port, cmd, pdMS_TO_TICKS(50));
-      i2c_cmd_link_delete(cmd);
+
+    if (!system_is_running()) {
+      vTaskDelay(pdMS_TO_TICKS(100));
+      continue;
     }
 
-    vTaskDelay(pdMS_TO_TICKS(s_period_ms));
+    if (mpu_read(REG_ACCEL_XOUT, raw, sizeof(raw)) == ESP_OK) {
+      int16_t ax = (raw[0] << 8) | raw[1];
+      int16_t ay = (raw[2] << 8) | raw[3];
+      int16_t az = (raw[4] << 8) | raw[5];
+      int16_t gx = (raw[8] << 8) | raw[9];
+      int16_t gy = (raw[10] << 8) | raw[11];
+      int16_t gz = (raw[12] << 8) | raw[13];
+
+      packet_feed_imu_raw(
+        ax, ay, az,
+        gx, gy, gz,
+        esp_timer_get_time() / 1000ULL
+      );
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(20));
   }
 
   i2c_driver_delete(s_port);
-
   s_task = NULL;
   vTaskDelete(NULL);
 }
@@ -32,20 +74,13 @@ static void mpu6050_task(void *arg) {
 esp_err_t mpu6050_start(
   gpio_num_t sda,
   gpio_num_t scl,
-  uint32_t freq_hz,
-  uint32_t stack_size,
-  UBaseType_t priority,
-  TaskHandle_t *out_task
+  uint32_t freq,
+  uint32_t stack,
+  UBaseType_t prio,
+  TaskHandle_t *out
 ) {
-  if (s_task) {
-    if (out_task) {
-      *out_task = s_task;
-    }
-    return ESP_OK;
-  }
+  if (s_task) return ESP_OK;
 
-  s_port = I2C_NUM_0;
-  s_period_ms = 20;
   s_running = true;
 
   i2c_config_t cfg = {
@@ -54,33 +89,37 @@ esp_err_t mpu6050_start(
     .scl_io_num = scl,
     .sda_pullup_en = GPIO_PULLUP_ENABLE,
     .scl_pullup_en = GPIO_PULLUP_ENABLE,
-    .master.clk_speed = freq_hz
+    .master.clk_speed = freq
   };
 
   ESP_ERROR_CHECK(i2c_param_config(s_port, &cfg));
   ESP_ERROR_CHECK(i2c_driver_install(s_port, cfg.mode, 0, 0, 0));
 
-  xTaskCreate(
-    mpu6050_task,
-    "mpu6050",
-    stack_size,
-    NULL,
-    priority,
-    &s_task
-  );
-
-  if (out_task) {
-    *out_task = s_task;
+  uint8_t whoami = 0;
+  if (mpu_read(REG_WHO_AM_I, &whoami, 1) != ESP_OK || whoami != 0x68) {
+    ESP_LOGE(TAG, "WHO_AM_I failed");
+    i2c_driver_delete(s_port);
+    return ESP_FAIL;
   }
 
+  mpu_write(REG_PWR_MGMT_1, 0x00);
+  vTaskDelay(pdMS_TO_TICKS(10));
+
+  xTaskCreatePinnedToCore(
+    mpu6050_task,
+    "mpu6050",
+    stack,
+    NULL,
+    prio,
+    &s_task,
+    1
+  );
+
+  if (out) *out = s_task;
   return ESP_OK;
 }
 
 void mpu6050_stop(void) {
-  if (!s_task) {
-    return;
-  }
-
   s_running = false;
 }
 
