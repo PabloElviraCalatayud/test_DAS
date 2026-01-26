@@ -11,29 +11,22 @@ class BleScanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ble = BleManager.instance;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Bluetooth')),
-      body: StreamBuilder<BleConnectionState>(
-        stream: ble.stateStream,
-        initialData: ble.state,
-        builder: (context, snap) {
-          final state = snap.data!;
+    return StreamBuilder<BleConnectionState>(
+      stream: ble.stateStream,
+      initialData: ble.state,
+      builder: (context, snap) {
+        final state = snap.data!;
 
-          if (state == BleConnectionState.connected) {
-            return _connectedView(context, ble);
-          }
+        if (state == BleConnectionState.connected) {
+          return _connectedView(context, ble);
+        }
 
-          return _scanView(context, ble, state);
-        },
-      ),
+        return _scanView(context, ble);
+      },
     );
   }
 
-  Widget _scanView(
-      BuildContext context,
-      BleManager ble,
-      BleConnectionState state,
-      ) {
+  Widget _scanView(BuildContext context, BleManager ble) {
     return Column(
       children: [
         Padding(
@@ -128,9 +121,11 @@ class BleScanPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           OutlinedButton(
-            onPressed: () async {
-              //await ble.disconnect();
-            },
+            onPressed: ble.state == BleConnectionState.connected
+                ? () async {
+              await ble.disconnect();
+            }
+                : null,
             child: const Text('Desconectar'),
           ),
         ],

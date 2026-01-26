@@ -124,4 +124,26 @@ class BleManager {
   Future<void> endOtaMode() async {
     _otaActive = false;
   }
+
+  Future<void> disconnect() async {
+    if (connectedDevice == null) {
+      _setState(BleConnectionState.idle);
+      return;
+    }
+
+    try {
+      await _notifyChar?.setNotifyValue(false);
+    } catch (_) {}
+
+    try {
+      await connectedDevice!.disconnect();
+    } catch (_) {}
+
+    connectedDevice = null;
+    _notifyChar = null;
+    _writeChar = null;
+    _otaActive = false;
+
+    _setState(BleConnectionState.idle);
+  }
 }

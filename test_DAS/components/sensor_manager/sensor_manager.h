@@ -3,6 +3,4 @@
 #include "esp_err.h"
 
 esp_err_t sensor_manager_init(void);
-void sensor_manager_start(void);
-void sensor_manager_stop(void);
 

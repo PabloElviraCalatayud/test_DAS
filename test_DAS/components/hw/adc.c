@@ -2,6 +2,10 @@
 #include "esp_log.h"
 #include <string.h>
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
+#define TAG "ADC_DRV"
 #define FRAME_SIZE 1024
 
 static const adc_channel_t adc_channels[] = {
@@ -63,10 +67,16 @@ int adc_driver_read_multi(adc_continuous_handle_t handle, adc_channel_result_t *
 
 void adc_driver_deinit(adc_continuous_handle_t handle) {
   if (!handle) {
+    ESP_LOGW(TAG, "Handle is NULL");
     return;
   }
 
-  adc_continuous_stop(handle);
-  adc_continuous_deinit(handle);
+  ESP_LOGI(TAG, "Deinitializing ADC handle");
+  esp_err_t ret = adc_continuous_deinit(handle);
+  
+  if (ret != ESP_OK) {
+    ESP_LOGE(TAG, "Deinit failed: %s", esp_err_to_name(ret));
+  } else {
+    ESP_LOGI(TAG, "ADC deinitialized successfully");
+  }
 }
-

@@ -29,7 +29,7 @@ typedef struct {
   uint8_t data[247];
 } ble_packet_t;
 
-QueueHandle_t ble_tx_queue;
+static QueueHandle_t ble_tx_queue;
 
 static uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE;
 static uint16_t tx_handle;
@@ -56,6 +56,14 @@ static int chr_tx_access_cb(uint16_t c, uint16_t a, struct ble_gatt_access_ctxt 
 }
 
 static int chr_rx_access_cb(uint16_t c, uint16_t a, struct ble_gatt_access_ctxt *ctxt, void *arg) {
+  ESP_LOGI(TAG, "RX: received %d bytes", ctxt->om->om_len);
+  
+  if (ctxt->om->om_len >= 5) {
+    ESP_LOGI(TAG, "RX data: cmd=0x%02X seq=%d", 
+             ctxt->om->om_data[0], 
+             ctxt->om->om_data[1] | (ctxt->om->om_data[2] << 8));
+  }
+  
   ota_manager_handle_packet(ctxt->om->om_data, ctxt->om->om_len);
   return 0;
 }
@@ -94,7 +102,6 @@ static int gap_event_cb(struct ble_gap_event *event, void *arg) {
         ESP_LOGI(TAG, "Device CONNECTED, handle=%d", conn_handle);
         system_state_set(SYS_STATE_RUNNING);
       } else {
-        ESP_LOGW(TAG, "Connect failed");
         ble_advertise();
       }
       break;
@@ -109,8 +116,7 @@ static int gap_event_cb(struct ble_gap_event *event, void *arg) {
     case BLE_GAP_EVENT_SUBSCRIBE:
       if (event->subscribe.attr_handle == tx_handle) {
         notify_enabled = event->subscribe.cur_notify;
-        ESP_LOGI(TAG, "Notify %s",
-          notify_enabled ? "ENABLED" : "DISABLED");
+        ESP_LOGI(TAG, "Notify %s", notify_enabled ? "ENABLED" : "DISABLED");
       }
       break;
 
@@ -148,8 +154,10 @@ static void ble_host_task(void *param) {
 
 static void ble_tx_task(void *arg) {
   ble_packet_t pkt;
+
   while (1) {
     if (xQueueReceive(ble_tx_queue, &pkt, portMAX_DELAY)) {
+      // Permitir envío durante OTA (ACKs)
       bluetooth_notify(pkt.data, pkt.len);
       vTaskDelay(pdMS_TO_TICKS(15));
     }
@@ -159,7 +167,7 @@ static void ble_tx_task(void *arg) {
 void bluetooth_init(void) {
   nvs_flash_init();
 
-  ble_tx_queue = xQueueCreate(8, sizeof(ble_packet_t));
+  ble_tx_queue = xQueueCreate(16, sizeof(ble_packet_t)); // Aumentado de 8 a 16
 
   esp_nimble_hci_init();
   nimble_port_init();
@@ -196,10 +204,10 @@ bool bluetooth_tx_enqueue(const uint8_t *data, uint16_t len) {
     return false;
   }
 
+  // Permitir envío durante OTA para los ACKs
   ble_packet_t pkt;
   pkt.len = len;
   memcpy(pkt.data, data, len);
 
-  return xQueueSend(ble_tx_queue, &pkt, 0) == pdTRUE;
+  return xQueueSend(ble_tx_queue, &pkt, pdMS_TO_TICKS(100)) == pdTRUE;
 }
-
