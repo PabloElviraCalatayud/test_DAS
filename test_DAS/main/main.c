@@ -6,6 +6,7 @@
 #include "sensor_manager.h"
 #include "ota_manager.h"
 #include "packet_manager.h"
+#include "OLED.h"
 
 /* --- ADAPTADOR packet_manager -> BLE --- */
 static void packet_tx_ble_adapter(const uint8_t *data, uint16_t len) {
@@ -23,6 +24,10 @@ void app_main(void) {
   sensor_manager_init();
 
   system_state_set(SYS_STATE_RUNNING);
+  
+  
+  OLED_start();
+  
 
   while (1) {
     vTaskDelay(pdMS_TO_TICKS(1000));

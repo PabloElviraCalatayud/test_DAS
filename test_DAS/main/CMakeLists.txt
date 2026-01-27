@@ -12,5 +12,8 @@ idf_component_register(
     freertos
     system
     sensor_manager
+  PRIV_REQUIRES
+    driver freertos esp_adc esp_driver_gpio OLED
+    
 )
 
