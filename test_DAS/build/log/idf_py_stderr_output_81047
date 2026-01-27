@@ -1,0 +1,41 @@
+Command: /home/pelvira/.espressif/python_env/idf5.5_py3.10_env/bin/python /home/pelvira/esp/esp-idf/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 /home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/test_DAS.elf /home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/build/bootloader/bootloader.elf -m '/home/pelvira/.espressif/python_env/idf5.5_py3.10_env/bin/python' '/home/pelvira/esp/esp-idf/tools/idf.py'
+[0;33m--- esp-idf-monitor 1.9.0 on /dev/ttyUSB0 115200[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
+[0m--- 0x40080400: [0;33m_invalid_pc_placeholder[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m2235[0m
+[0m--- 0x40080638: [0;33mcall_start_cpu0[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/bootloader/subproject/main/bootloader_start.c[0m[0m:[1;31m25[0m
+[0m--- 0x4008464a: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40083559: [0;33m_xt_lowint1[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1240[0m
+[0m--- 0x400912de: [0;33mvTaskDelay[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/tasks.c[0m[0m:[1;31m1611[0m
+[0m--- 0x400d7a9c: [0;33msensor_test_task[0m[0m at [0;32m/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/components/sensor_test/sensor_test.c[0m[0m:[1;31m108[0m
+[0m--- 0x4008f83d: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m139[0m
+[0m--- 0x4008464a: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40083559: [0;33m_xt_lowint1[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1240[0m
+[0m--- 0x4000bfed: [0;33m_xtos_set_intlevel[0m[0m in [0;32mROM[0m
+[0m--- 0x4008fb9a: [0;33mvPortClearInterruptMaskFromISR[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m560[0m
+[0m--- (inlined by) [0;33mvPortExitCritical[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m514[0m
+[0m--- 0x40084696: [0;33mesp_crosscore_int_send[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m118[0m
+[0m--- 0x400846bd: [0;33mesp_crosscore_int_send_yield[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m125[0m
+[0m--- 0x400912de: [0;33mvTaskDelay[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/tasks.c[0m[0m:[1;31m1611[0m
+[0m--- 0x400d7a9c: [0;33msensor_test_task[0m[0m at [0;32m/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/components/sensor_test/sensor_test.c[0m[0m:[1;31m108[0m
+[0m--- 0x4008f83d: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m139[0m
+[0m--- 0x4008464a: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40083559: [0;33m_xt_lowint1[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1240[0m
+[0m--- 0x4000bfed: [0;33m_xtos_set_intlevel[0m[0m in [0;32mROM[0m
+[0m--- 0x4008fb9a: [0;33mvPortClearInterruptMaskFromISR[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m560[0m
+[0m--- (inlined by) [0;33mvPortExitCritical[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m514[0m
+[0m--- 0x4008f247: [0;33mxQueueGenericSend[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/queue.c[0m[0m:[1;31m1056[0m
+[0m--- 0x400e8f79: [0;33msystem_state_get[0m[0m at [0;32m/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/components/system/system_state.c[0m[0m:[1;31m50[0m
+[0m--- 0x400e8f83: [0;33msystem_is_running[0m[0m at [0;32m/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/components/system/system_state.c[0m[0m:[1;31m55[0m
+[0m--- 0x400d7974: [0;33msensor_test_task[0m[0m at [0;32m/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/components/sensor_test/sensor_test.c[0m[0m:[1;31m66[0m
+[0m--- 0x4008f83d: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m139[0m
+[0m--- 0x4008464a: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40083559: [0;33m_xt_lowint1[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1240[0m
+[0m--- 0x400829e3: [0;33mesp_timer_impl_get_time[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/esp_timer/src/esp_timer_impl_lac.c[0m[0m:[1;31m128[0m
+[0m--- 0x400d7984: [0;33msensor_test_task[0m[0m at [0;32m/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/components/sensor_test/sensor_test.c[0m[0m:[1;31m71[0m
+[0m--- 0x4008f83d: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m139[0m
+[0m--- 0x4008464a: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40083559: [0;33m_xt_lowint1[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1240[0m
+[0m--- 0x400912de: [0;33mvTaskDelay[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/tasks.c[0m[0m:[1;31m1611[0m
+[0m--- 0x400d7a9c: [0;33msensor_test_task[0m[0m at [0;32m/home/pelvira/Documents/Universidad/7_Septimo_Semestre/SBC/test_SBC/test_DAS/components/sensor_test/sensor_test.c[0m[0m:[1;31m108[0m
+[0m--- 0x4008f83d: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/pelvira/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m139[0m
+[0m

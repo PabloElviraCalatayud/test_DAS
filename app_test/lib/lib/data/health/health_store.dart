@@ -9,8 +9,7 @@ import 'health_state.dart';
 
 enum _ApneaState {
   idle,
-  possible,
-  confirmed,
+  detecting,
 }
 
 class HealthStore {
@@ -39,19 +38,31 @@ class HealthStore {
   double _maxBpm = 0;
 
   final List<double> _bpmWindow = [];
-  static const int _baselineWindowSize = 30;
+  static const int _baselineWindowSize = 20;
+
+  static const double _bpmDropAbsolute = 5.0;
+  static const double _movementLowThreshold = 2.0;
+
+  static const Duration _minApneaDuration =
+  Duration(seconds: 1);
+  static const Duration _maxApneaDuration =
+  Duration(seconds: 30);
 
   void _onPacket(pkt) {
-    if (pkt.pulseSamples.isNotEmpty) {
-      final bpm = pkt.pulseSamples.last.bpm;
-      if (bpm != null) {
-        _state.avgBpm = bpm;
-        _updateBaseline(bpm);
-        _detectApnea();
-        _recalculateSleepScore();
-        _ctrl.add(_state);
-      }
+    if (pkt.pulseSamples.isEmpty) {
+      return;
     }
+
+    final bpm = pkt.pulseSamples.last.bpm;
+    if (bpm == null || bpm <= 0) {
+      return;
+    }
+
+    _state.avgBpm = bpm;
+    _updateBaseline(bpm);
+    _detectApnea();
+    _recalculateSleepScore();
+    _ctrl.add(_state);
   }
 
   void _onImuState(ImuState imuState) {
@@ -68,7 +79,7 @@ class HealthStore {
       final movement = dx + dy + dz;
 
       _state.movementIndex =
-          (_state.movementIndex * 0.9) + (movement * 0.1);
+          (_state.movementIndex * 0.8) + (movement * 0.2);
 
       _detectApnea();
       _recalculateSleepScore();
@@ -85,7 +96,8 @@ class HealthStore {
     }
 
     _baselineBpm =
-        _bpmWindow.reduce((a, b) => a + b) / _bpmWindow.length;
+        _bpmWindow.reduce((a, b) => a + b) /
+            _bpmWindow.length;
   }
 
   void _detectApnea() {
@@ -96,46 +108,36 @@ class HealthStore {
     final now = DateTime.now();
     final bpm = _state.avgBpm;
 
-    final immobile = _state.movementIndex < 0.15;
-    final bpmDrop = bpm < _baselineBpm * 0.95;
-    final bpmRebound = bpm > _baselineBpm * 1.08;
+    final lowMovement =
+        _state.movementIndex < _movementLowThreshold;
+
+    final bpmDrop =
+        (_baselineBpm - bpm) >= _bpmDropAbsolute;
+
+    final apneaCondition = bpmDrop || lowMovement;
 
     switch (_apneaState) {
       case _ApneaState.idle:
-        if (immobile) {
-          _apneaState = _ApneaState.possible;
+        if (apneaCondition) {
+          _apneaState = _ApneaState.detecting;
           _apneaStart = now;
           _minBpm = bpm;
           _maxBpm = bpm;
         }
         break;
 
-      case _ApneaState.possible:
+      case _ApneaState.detecting:
         _minBpm = bpm < _minBpm ? bpm : _minBpm;
         _maxBpm = bpm > _maxBpm ? bpm : _maxBpm;
 
-        if (bpmDrop &&
-            now.difference(_apneaStart!).inSeconds >= 10) {
-          _apneaState = _ApneaState.confirmed;
-        }
+        final duration =
+        now.difference(_apneaStart!);
 
-        if (!immobile) {
-          _resetApnea();
-        }
-        break;
-
-      case _ApneaState.confirmed:
-        _minBpm = bpm < _minBpm ? bpm : _minBpm;
-        _maxBpm = bpm > _maxBpm ? bpm : _maxBpm;
-
-        if (bpmRebound || !immobile) {
-          final duration =
-              now.difference(_apneaStart!).inSeconds;
-
-          if (duration >= 10 && duration <= 60) {
+        if (!apneaCondition) {
+          if (duration >= _minApneaDuration &&
+              duration <= _maxApneaDuration) {
             _registerApnea(now);
           }
-
           _resetApnea();
         }
         break;
@@ -153,7 +155,7 @@ class HealthStore {
     _state.apneas.add(event);
     _state.apneaCount = _state.apneas.length;
     _state.apneaProbability =
-        (_state.apneaCount / 8).clamp(0, 1);
+        (_state.apneaCount / 5).clamp(0, 1);
   }
 
   void _resetApnea() {
@@ -166,15 +168,14 @@ class HealthStore {
   void _recalculateSleepScore() {
     double score = 100;
 
-    if (_state.avgBpm > 80) score -= 20;
-    if (_state.avgBpm > 90) score -= 20;
+    if (_state.avgBpm > 80) score -= 15;
+    if (_state.avgBpm > 100) score -= 25;
 
-    if (_state.movementIndex > 2.0) score -= 15;
-    if (_state.movementIndex > 4.0) score -= 25;
-    if (_state.movementIndex > 6.0) score -= 40;
+    if (_state.movementIndex > 5) score -= 15;
+    if (_state.movementIndex > 10) score -= 30;
 
-    if (_state.apneaCount > 2) score -= 10;
-    if (_state.apneaCount > 5) score -= 25;
+    if (_state.apneaCount > 0) score -= 10;
+    if (_state.apneaCount > 3) score -= 25;
 
     _state.sleepScore = score.clamp(0, 100).round();
   }

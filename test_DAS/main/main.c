@@ -6,6 +6,15 @@
 #include "sensor_manager.h"
 #include "ota_manager.h"
 #include "packet_manager.h"
+#include "sensor_test.h"
+
+/* =========================================================
+ *  CONFIGURACIÓN DE MODO
+ * ========================================================= */
+#define SENSOR_SIMULATION_MODE  1
+/*  1 = Simulación
+ *  0 = Sensores reales
+ */
 
 /* --- ADAPTADOR packet_manager -> BLE --- */
 static void packet_tx_ble_adapter(const uint8_t *data, uint16_t len) {
@@ -20,7 +29,11 @@ void app_main(void) {
 
   packet_manager_init(packet_tx_ble_adapter);
 
+#if SENSOR_SIMULATION_MODE
+  sensor_test_start();
+#else
   sensor_manager_init();
+#endif
 
   system_state_set(SYS_STATE_RUNNING);
 
