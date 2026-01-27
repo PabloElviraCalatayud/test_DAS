@@ -1,0 +1,886 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:7176
+load:0x40078000,len:15564
+ho 0 tail 12 room 4
+load:0x40080400,len:4
+load:0x40080404,len:3904
+entry 0x40080640
+[0;32mI (31) boot: ESP-IDF v5.3.1-dirty 2nd stage bootloader[0m
+[0;32mI (31) boot: compile time Jan 27 2026 04:03:06[0m
+[0;32mI (31) boot: Multicore bootloader[0m
+[0;32mI (36) boot: chip revision: v3.1[0m
+[0;32mI (40) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (44) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (49) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (53) boot: Enabling RNG early entropy source...[0m
+[0;32mI (59) boot: Partition Table:[0m
+[0;32mI (62) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (70) boot:  0 nvs              WiFi data        01 02 00009000 00005000[0m
+[0;32mI (77) boot:  1 otadata          OTA data         01 00 0000e000 00002000[0m
+[0;32mI (85) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (92) boot:  3 ota_0            OTA app          00 10 00110000 00100000[0m
+[0;32mI (100) boot:  4 ota_1            OTA app          00 11 00210000 00100000[0m
+[0;32mI (107) boot:  5 offline_data     Unknown data     01 40 00310000 000f0000[0m
+[0;32mI (115) boot: End of partition table[0m
+[0;32mI (119) boot: Defaulting to factory image[0m
+[0;32mI (124) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=192b0h (103088) map[0m
+[0;32mI (168) esp_image: segment 1: paddr=000292d8 vaddr=3ffbdb60 size=04d74h ( 19828) load[0m
+[0;32mI (175) esp_image: segment 2: paddr=0002e054 vaddr=40080000 size=01fc4h (  8132) load[0m
+[0;32mI (179) esp_image: segment 3: paddr=00030020 vaddr=400d0020 size=58490h (361616) map[0m
+[0;32mI (306) esp_image: segment 4: paddr=000884b8 vaddr=40081fc4 size=16c20h ( 93216) load[0m
+[0;32mI (355) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (355) boot: Disabling RNG early entropy source...[0m
+[0;32mI (367) cpu_start: Multicore app[0m
+[0;32mI (375) cpu_start: Pro cpu start user code[0m
+[0;32mI (376) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (376) app_init: Application information:[0m
+[0;32mI (378) app_init: Project name:     test_DAS[0m
+[0;32mI (383) app_init: App version:      c4b6500-dirty[0m
+[0;32mI (389) app_init: Compile time:     Jan 27 2026 04:03:01[0m
+[0;32mI (395) app_init: ELF file SHA256:  07fcc5927...[0m
+[0;32mI (400) app_init: ESP-IDF:          v5.3.1-dirty[0m
+[0;32mI (405) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (410) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (415) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (420) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (427) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM[0m
+[0;32mI (433) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM[0m
+[0;32mI (439) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM[0m
+[0;32mI (445) heap_init: At 3FFC56F8 len 0001A908 (106 KiB): DRAM[0m
+[0;32mI (452) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (458) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (464) heap_init: At 40098BE4 len 0000741C (29 KiB): IRAM[0m
+[0;32mI (472) spi_flash: detected chip: generic[0m
+[0;32mI (475) spi_flash: flash io: dio[0m
+[0;33mW (479) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (491) coexist: coex firmware version: 4482466[0m
+[0;32mI (496) main_task: Started on CPU0[0m
+[0;32mI (506) main_task: Calling app_main()[0m
+[0;32mI (506) MAIN: System boot[0m
+[0;32mI (506) MAIN: System state initialized[0m
+[0;32mI (506) offline_storage: Using partition 'offline_data' @0x00310000 size=983040[0m
+[0;32mI (516) MAIN: Offline storage initialized, count=2[0m
+[0;32mI (526) BTDM_INIT: BT controller compile version [b022216][0m
+[0;32mI (526) BTDM_INIT: Bluetooth MAC: ec:e3:34:b3:48:72[0m
+[0;32mI (536) phy_init: phy_version 4830,54550f7,Jun 20 2024,14:22:08[0m
+[0;33mW (616) phy_init: saving new calibration data because of checksum failure, mode(0)[0m
+[0;32mI (906) MAIN: Bluetooth initialized[0m
+[0;33mW (906) MAIN: OTA manager DISABLED[0m
+[0;32mI (906) SENSOR_MGR: Init sensor manager[0m
+[0;32mI (916) MAIN: Sensor manager initialized[0m
+[0;32mI (916) MAIN: Packet manager initialized[0m
+[0;32mI (926) SENSOR_MGR: Starting MPU6050[0m
+[0;31mE (936) MPU: WHO_AM_I failed[0m
+[0;32mI (936) SENSOR_MGR: Starting pulse sensor[0m
+[0;32mI (936) gpio: GPIO[36]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (946) MAIN: System state set to RUNNING[0m
+[0;32mI (956) NimBLE: Failed to restore IRKs from store; status=8
+[0m
+[0;32mI (956) NimBLE: GAP procedure initiated: advertise; [0m
+[0;32mI (956) NimBLE: disc_mode=2[0m
+[0;32mI (966) NimBLE:  adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0[0m
+[0;32mI (976) NimBLE: 
+[0m
+[0;32mI (6946) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (6946) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (12956) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (12956) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (18966) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (18966) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (24976) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (24976) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (30986) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (30986) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (36996) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (36996) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (43006) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (43006) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (49016) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (49016) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (55026) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (55026) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (61036) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (61036) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (67046) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (67046) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (73056) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (73056) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (79066) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (79066) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (85076) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (85076) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (91086) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (91086) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (97096) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (97096) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (103106) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (103106) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (109116) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (109116) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (115126) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (115126) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (121136) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (121136) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (127146) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (127146) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (133156) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (133156) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (139166) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (139166) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (145176) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (145176) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (151186) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (151186) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (157196) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (157196) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (163206) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (163206) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (169216) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (169216) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (175226) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (175226) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (181236) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (181236) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (187246) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (187246) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (193256) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x400ffa54  PS      : 0x00060035  A0      : 0x80086253  A1      : 0x3ffbf1c0  
+A2      : 0x00000000  A3      : 0x00000001  A4      : 0x00802000  A5      : 0x00800000  
+A6      : 0x3ffcf6d8  A7      : 0x3ffc3144  A8      : 0x80086188  A9      : 0xa60003ee  
+A10     : 0x3ffcf6dc  A11     : 0x3ffd0110  A12     : 0x3ffbf1c4  A13     : 0x3ffbf1c8  
+A14     : 0x00000001  A15     : 0x00000002  SAR     : 0x00000018  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c46c  LEND    : 0x4000c477  LCOUNT  : 0x00000000  
+
+
+Backtrace: 0x400ffa51:0x3ffbf1c0 0x40086250:0x3ffbf200 0x40083b65:0x3ffbf220 0x40094d2d:0x3ffd2050 0x40094b4a:0x3ffd2070 0x40097dbb:0x3ffd2090 0x4008503f:0x3ffd2110 0x400e9ec2:0x3ffd2150 0x400e8085:0x3ffd2180 0x400e8413:0x3ffd21a0 0x400d7f91:0x3ffd21e0 0x400d7ff2:0x3ffd2270 0x400914f9:0x3ffd2290
+
+
+
+
+ELF file SHA256: 07fcc5927
+
+Rebooting...
+ets Jul 29 2019 12:21:46
+
+rst:0x3 (SW_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:7176
+load:0x40078000,len:15564
+ho 0 tail 12 room 4
+load:0x40080400,len:4
+load:0x40080404,len:3904
+entry 0x40080640
+[0;32mI (30) boot: ESP-IDF v5.3.1-dirty 2nd stage bootloader[0m
+[0;32mI (30) boot: compile time Jan 27 2026 04:03:06[0m
+[0;32mI (30) boot: Multicore bootloader[0m
+[0;32mI (36) boot: chip revision: v3.1[0m
+[0;32mI (39) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (44) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (48) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (53) boot: Enabling RNG early entropy source...[0m
+[0;32mI (58) boot: Partition Table:[0m
+[0;32mI (62) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (69) boot:  0 nvs              WiFi data        01 02 00009000 00005000[0m
+[0;32mI (77) boot:  1 otadata          OTA data         01 00 0000e000 00002000[0m
+[0;32mI (84) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (92) boot:  3 ota_0            OTA app          00 10 00110000 00100000[0m
+[0;32mI (99) boot:  4 ota_1            OTA app          00 11 00210000 00100000[0m
+[0;32mI (107) boot:  5 offline_data     Unknown data     01 40 00310000 000f0000[0m
+[0;32mI (114) boot: End of partition table[0m
+[0;32mI (119) boot: Defaulting to factory image[0m
+[0;32mI (123) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=192b0h (103088) map[0m
+[0;32mI (167) esp_image: segment 1: paddr=000292d8 vaddr=3ffbdb60 size=04d74h ( 19828) load[0m
+[0;32mI (175) esp_image: segment 2: paddr=0002e054 vaddr=40080000 size=01fc4h (  8132) load[0m
+[0;32mI (178) esp_image: segment 3: paddr=00030020 vaddr=400d0020 size=58490h (361616) map[0m
+[0;32mI (305) esp_image: segment 4: paddr=000884b8 vaddr=40081fc4 size=16c20h ( 93216) load[0m
+[0;32mI (355) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (355) boot: Disabling RNG early entropy source...[0m
+[0;32mI (367) cpu_start: Multicore app[0m
+[0;32mI (375) cpu_start: Pro cpu start user code[0m
+[0;32mI (375) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (375) app_init: Application information:[0m
+[0;32mI (378) app_init: Project name:     test_DAS[0m
+[0;32mI (383) app_init: App version:      c4b6500-dirty[0m
+[0;32mI (388) app_init: Compile time:     Jan 27 2026 04:03:01[0m
+[0;32mI (394) app_init: ELF file SHA256:  07fcc5927...[0m
+[0;32mI (400) app_init: ESP-IDF:          v5.3.1-dirty[0m
+[0;32mI (405) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (410) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (415) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (420) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (427) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM[0m
+[0;32mI (433) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM[0m
+[0;32mI (439) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM[0m
+[0;32mI (445) heap_init: At 3FFC56F8 len 0001A908 (106 KiB): DRAM[0m
+[0;32mI (451) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (457) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (464) heap_init: At 40098BE4 len 0000741C (29 KiB): IRAM[0m
+[0;32mI (472) spi_flash: detected chip: generic[0m
+[0;32mI (475) spi_flash: flash io: dio[0m
+[0;33mW (479) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (490) coexist: coex firmware version: 4482466[0m
+[0;32mI (496) main_task: Started on CPU0[0m
+[0;32mI (506) main_task: Calling app_main()[0m
+[0;32mI (506) MAIN: System boot[0m
+[0;32mI (506) MAIN: System state initialized[0m
+[0;32mI (506) offline_storage: Using partition 'offline_data' @0x00310000 size=983040[0m
+[0;32mI (516) MAIN: Offline storage initialized, count=2[0m
+[0;32mI (526) BTDM_INIT: BT controller compile version [b022216][0m
+[0;32mI (526) BTDM_INIT: Bluetooth MAC: ec:e3:34:b3:48:72[0m
+[0;32mI (536) phy_init: phy_version 4830,54550f7,Jun 20 2024,14:22:08[0m
+[0;32mI (866) MAIN: Bluetooth initialized[0m
+[0;33mW (866) MAIN: OTA manager DISABLED[0m
+[0;32mI (866) SENSOR_MGR: Init sensor manager[0m
+[0;32mI (866) MAIN: Sensor manager initialized[0m
+[0;32mI (876) MAIN: Packet manager initialized[0m
+[0;32mI (876) SENSOR_MGR: Starting MPU6050[0m
+[0;31mE (886) MPU: WHO_AM_I failed[0m
+[0;32mI (886) SENSOR_MGR: Starting pulse sensor[0m
+[0;32mI (896) gpio: GPIO[36]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (896) MAIN: System state set to RUNNING[0m
+[0;32mI (906) NimBLE: Failed to restore IRKs from store; status=8
+[0m
+[0;32mI (906) NimBLE: GAP procedure initiated: advertise; [0m
+[0;32mI (916) NimBLE: disc_mode=2[0m
+[0;32mI (916) NimBLE:  adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0[0m
+[0;32mI (926) NimBLE: 
+[0m
+[0;32mI (6896) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (6896) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (12906) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (12906) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (18916) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (18916) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (24926) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (24926) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (30936) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (30936) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (36946) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (36946) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (42956) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (42956) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (48966) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (48966) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (54976) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (54976) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (60986) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (60986) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (66996) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (66996) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (73006) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (73006) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (79016) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (79016) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (85026) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (85026) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (91036) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (91036) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (97046) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (97046) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (103056) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (103056) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (109066) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (109066) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (115076) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (115076) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (121086) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (121086) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (127096) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (127096) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (133106) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (133106) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (139116) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (139116) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (145126) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (145126) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (151136) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (151136) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (157146) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (157146) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (163156) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (163156) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (169166) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (169166) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (175176) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (175176) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (181186) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (181186) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (187196) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (187196) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (193206) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (193206) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (199216) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (199216) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (205226) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (205226) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (211236) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (211236) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (217246) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (217246) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (223256) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (223256) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (229266) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (229266) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (235276) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (235276) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (241286) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x400ffa54  PS      : 0x00060035  A0      : 0x80086253  A1      : 0x3ffbf1c0  
+A2      : 0x00000000  A3      : 0x00000001  A4      : 0x800847bb  A5      : 0x3ffd2070  
+A6      : 0x3ffcf6d8  A7      : 0x3ffc3144  A8      : 0x80086188  A9      : 0xa60003ee  
+A10     : 0x3ffcf6dc  A11     : 0x3ffd00e0  A12     : 0x3ffbf1c4  A13     : 0x3ffbf1c8  
+A14     : 0x00000001  A15     : 0x00000002  SAR     : 0x00000018  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0xffffffff  
+
+
+Backtrace: 0x400ffa51:0x3ffbf1c0 0x40086250:0x3ffbf200 0x40083b65:0x3ffbf220 0x4009488c:0x3ffd2040 0x40097bb9:0x3ffd2070 0x40097d58:0x3ffd2090 0x4008503f:0x3ffd2110 0x400e9ec2:0x3ffd2150 0x400e8085:0x3ffd2180 0x400e8425:0x3ffd21a0 0x400d7f91:0x3ffd21e0 0x400d7ff2:0x3ffd2270 0x400914f9:0x3ffd2290
+
+
+
+
+ELF file SHA256: 07fcc5927
+
+Rebooting...
+ets Jul 29 2019 12:21:46
+
+rst:0x3 (SW_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:7176
+load:0x40078000,len:15564
+ho 0 tail 12 room 4
+load:0x40080400,len:4
+load:0x40080404,len:3904
+entry 0x40080640
+[0;32mI (30) boot: ESP-IDF v5.3.1-dirty 2nd stage bootloader[0m
+[0;32mI (30) boot: compile time Jan 27 2026 04:03:06[0m
+[0;32mI (30) boot: Multicore bootloader[0m
+[0;32mI (36) boot: chip revision: v3.1[0m
+[0;32mI (39) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (44) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (48) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (53) boot: Enabling RNG early entropy source...[0m
+[0;32mI (58) boot: Partition Table:[0m
+[0;32mI (62) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (69) boot:  0 nvs              WiFi data        01 02 00009000 00005000[0m
+[0;32mI (77) boot:  1 otadata          OTA data         01 00 0000e000 00002000[0m
+[0;32mI (84) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (92) boot:  3 ota_0            OTA app          00 10 00110000 00100000[0m
+[0;32mI (99) boot:  4 ota_1            OTA app          00 11 00210000 00100000[0m
+[0;32mI (107) boot:  5 offline_data     Unknown data     01 40 00310000 000f0000[0m
+[0;32mI (114) boot: End of partition table[0m
+[0;32mI (119) boot: Defaulting to factory image[0m
+[0;32mI (123) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=192b0h (103088) map[0m
+[0;32mI (167) esp_image: segment 1: paddr=000292d8 vaddr=3ffbdb60 size=04d74h ( 19828) load[0m
+[0;32mI (175) esp_image: segment 2: paddr=0002e054 vaddr=40080000 size=01fc4h (  8132) load[0m
+[0;32mI (178) esp_image: segment 3: paddr=00030020 vaddr=400d0020 size=58490h (361616) map[0m
+[0;32mI (305) esp_image: segment 4: paddr=000884b8 vaddr=40081fc4 size=16c20h ( 93216) load[0m
+[0;32mI (355) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (355) boot: Disabling RNG early entropy source...[0m
+[0;32mI (367) cpu_start: Multicore app[0m
+[0;32mI (375) cpu_start: Pro cpu start user code[0m
+[0;32mI (375) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (375) app_init: Application information:[0m
+[0;32mI (378) app_init: Project name:     test_DAS[0m
+[0;32mI (383) app_init: App version:      c4b6500-dirty[0m
+[0;32mI (388) app_init: Compile time:     Jan 27 2026 04:03:01[0m
+[0;32mI (394) app_init: ELF file SHA256:  07fcc5927...[0m
+[0;32mI (400) app_init: ESP-IDF:          v5.3.1-dirty[0m
+[0;32mI (405) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (410) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (415) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (420) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (427) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM[0m
+[0;32mI (433) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM[0m
+[0;32mI (439) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM[0m
+[0;32mI (445) heap_init: At 3FFC56F8 len 0001A908 (106 KiB): DRAM[0m
+[0;32mI (451) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (457) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (464) heap_init: At 40098BE4 len 0000741C (29 KiB): IRAM[0m
+[0;32mI (472) spi_flash: detected chip: generic[0m
+[0;32mI (475) spi_flash: flash io: dio[0m
+[0;33mW (479) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (490) coexist: coex firmware version: 4482466[0m
+[0;32mI (496) main_task: Started on CPU0[0m
+[0;32mI (506) main_task: Calling app_main()[0m
+[0;32mI (506) MAIN: System boot[0m
+[0;32mI (506) MAIN: System state initialized[0m
+[0;32mI (506) offline_storage: Using partition 'offline_data' @0x00310000 size=983040[0m
+[0;32mI (516) MAIN: Offline storage initialized, count=2[0m
+[0;32mI (526) BTDM_INIT: BT controller compile version [b022216][0m
+[0;32mI (526) BTDM_INIT: Bluetooth MAC: ec:e3:34:b3:48:72[0m
+[0;32mI (536) phy_init: phy_version 4830,54550f7,Jun 20 2024,14:22:08[0m
+[0;32mI (856) MAIN: Bluetooth initialized[0m
+[0;33mW (856) MAIN: OTA manager DISABLED[0m
+[0;32mI (856) SENSOR_MGR: Init sensor manager[0m
+[0;32mI (856) MAIN: Sensor manager initialized[0m
+[0;32mI (866) MAIN: Packet manager initialized[0m
+[0;32mI (866) SENSOR_MGR: Starting MPU6050[0m
+[0;31mE (876) MPU: WHO_AM_I failed[0m
+[0;32mI (876) SENSOR_MGR: Starting pulse sensor[0m
+[0;32mI (886) gpio: GPIO[36]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (896) MAIN: System state set to RUNNING[0m
+[0;32mI (896) NimBLE: Failed to restore IRKs from store; status=8
+[0m
+[0;32mI (906) NimBLE: GAP procedure initiated: advertise; [0m
+[0;32mI (906) NimBLE: disc_mode=2[0m
+[0;32mI (906) NimBLE:  adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0[0m
+[0;32mI (916) NimBLE: 
+[0m
+[0;32mI (6896) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (6896) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (12906) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (12906) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (18916) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (18916) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (24926) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (24926) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (30936) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (30936) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (36946) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (36946) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (42956) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (42956) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (48966) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (48966) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (54976) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (54976) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (60986) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (60986) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (66996) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (66996) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (73006) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (73006) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (79016) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (79016) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (85026) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (85026) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (91036) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (91036) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (97046) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (97046) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (103056) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (103056) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (109066) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (109066) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (115076) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (115076) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (121086) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (121086) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (127096) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (127096) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (133106) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (133106) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (139116) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (139116) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (145126) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (145126) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (151136) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (151136) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (157146) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (157146) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (163156) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (163156) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (169166) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (169166) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (175176) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (175176) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (181186) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (181186) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (187196) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (187196) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (193206) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (193206) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (199216) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (199216) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (205226) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (205226) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (211236) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (211236) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (217246) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (217246) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (223256) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (223256) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (229266) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (229266) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (235276) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (235276) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (241286) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (241286) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (247296) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (247296) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (253306) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (253306) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (259316) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (259316) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (265326) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (265326) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (271336) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (271336) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (277346) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (277346) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (283356) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (283356) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (289366) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (289366) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (295376) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (295376) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (301386) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (301386) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (307396) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (307396) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (313406) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (313406) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (319416) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (319416) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (325426) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (325426) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (331436) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (331436) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (337446) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (337446) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (343456) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (343456) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (349466) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (349466) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (355476) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (355476) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (361486) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (361486) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (367496) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (367496) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (373506) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (373506) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (379516) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (379516) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (385526) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (385526) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (391536) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (391536) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (397546) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (397546) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (403556) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (403556) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (409566) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (409566) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (415576) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (415576) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (421586) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (421586) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (427596) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (427596) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (433606) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (433606) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (439616) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (439616) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (445626) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (445626) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x400ffa54  PS      : 0x00060035  A0      : 0x80086253  A1      : 0x3ffbf1c0  
+A2      : 0x00000000  A3      : 0x00000000  A4      : 0x8008568a  A5      : 0x3ffd2090  
+A6      : 0x3ffcf6d8  A7      : 0x00000000  A8      : 0x80086188  A9      : 0x00000000  
+A10     : 0x3ffcf6dc  A11     : 0x3ffd00f8  A12     : 0x3ffbf1c4  A13     : 0x3ffbf1c8  
+A14     : 0x00000001  A15     : 0x3ffc3144  SAR     : 0x00000018  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x4000c2e0  LEND    : 0x4000c2f6  LCOUNT  : 0x00000000  
+
+
+Backtrace: 0x400ffa51:0x3ffbf1c0 0x40086250:0x3ffbf200 0x40083b65:0x3ffbf220 0x40094df5:0x3ffd20d0 0x4008e831:0x3ffd20f0 0x4008501d:0x3ffd2110 0x400e9ec2:0x3ffd2150 0x400e8085:0x3ffd2180 0x400e8413:0x3ffd21a0 0x400d7f91:0x3ffd21e0 0x400d7ff2:0x3ffd2270 0x400914f9:0x3ffd2290
+
+
+
+
+ELF file SHA256: 07fcc5927
+
+Rebooting...
+ets Jul 29 2019 12:21:46
+
+rst:0x3 (SW_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:7176
+load:0x40078000,len:15564
+ho 0 tail 12 room 4
+load:0x40080400,len:4
+load:0x40080404,len:3904
+entry 0x40080640
+[0;32mI (30) boot: ESP-IDF v5.3.1-dirty 2nd stage bootloader[0m
+[0;32mI (30) boot: compile time Jan 27 2026 04:03:06[0m
+[0;32mI (30) boot: Multicore bootloader[0m
+[0;32mI (36) boot: chip revision: v3.1[0m
+[0;32mI (39) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (44) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (48) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (53) boot: Enabling RNG early entropy source...[0m
+[0;32mI (58) boot: Partition Table:[0m
+[0;32mI (62) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (69) boot:  0 nvs              WiFi data        01 02 00009000 00005000[0m
+[0;32mI (77) boot:  1 otadata          OTA data         01 00 0000e000 00002000[0m
+[0;32mI (84) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (92) boot:  3 ota_0            OTA app          00 10 00110000 00100000[0m
+[0;32mI (99) boot:  4 ota_1            OTA app          00 11 00210000 00100000[0m
+[0;32mI (107) boot:  5 offline_data     Unknown data     01 40 00310000 000f0000[0m
+[0;32mI (114) boot: End of partition table[0m
+[0;32mI (119) boot: Defaulting to factory image[0m
+[0;32mI (123) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=192b0h (103088) map[0m
+[0;32mI (167) esp_image: segment 1: paddr=000292d8 vaddr=3ffbdb60 size=04d74h ( 19828) load[0m
+[0;32mI (175) esp_image: segment 2: paddr=0002e054 vaddr=40080000 size=01fc4h (  8132) load[0m
+[0;32mI (178) esp_image: segment 3: paddr=00030020 vaddr=400d0020 size=58490h (361616) map[0m
+[0;32mI (305) esp_image: segment 4: paddr=000884b8 vaddr=40081fc4 size=16c20h ( 93216) load[0m
+[0;32mI (355) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (355) boot: Disabling RNG early entropy source...[0m
+[0;32mI (367) cpu_start: Multicore app[0m
+[0;32mI (375) cpu_start: Pro cpu start user code[0m
+[0;32mI (375) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (375) app_init: Application information:[0m
+[0;32mI (378) app_init: Project name:     test_DAS[0m
+[0;32mI (383) app_init: App version:      c4b6500-dirty[0m
+[0;32mI (388) app_init: Compile time:     Jan 27 2026 04:03:01[0m
+[0;32mI (394) app_init: ELF file SHA256:  07fcc5927...[0m
+[0;32mI (400) app_init: ESP-IDF:          v5.3.1-dirty[0m
+[0;32mI (405) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (410) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (415) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (420) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (427) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM[0m
+[0;32mI (433) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM[0m
+[0;32mI (439) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM[0m
+[0;32mI (445) heap_init: At 3FFC56F8 len 0001A908 (106 KiB): DRAM[0m
+[0;32mI (451) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (457) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (464) heap_init: At 40098BE4 len 0000741C (29 KiB): IRAM[0m
+[0;32mI (472) spi_flash: detected chip: generic[0m
+[0;32mI (475) spi_flash: flash io: dio[0m
+[0;33mW (479) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (490) coexist: coex firmware version: 4482466[0m
+[0;32mI (496) main_task: Started on CPU0[0m
+[0;32mI (506) main_task: Calling app_main()[0m
+[0;32mI (506) MAIN: System boot[0m
+[0;32mI (506) MAIN: System state initialized[0m
+[0;32mI (506) offline_storage: Using partition 'offline_data' @0x00310000 size=983040[0m
+[0;32mI (516) MAIN: Offline storage initialized, count=2[0m
+[0;32mI (526) BTDM_INIT: BT controller compile version [b022216][0m
+[0;32mI (526) BTDM_INIT: Bluetooth MAC: ec:e3:34:b3:48:72[0m
+[0;32mI (536) phy_init: phy_version 4830,54550f7,Jun 20 2024,14:22:08[0m
+[0;32mI (856) MAIN: Bluetooth initialized[0m
+[0;33mW (856) MAIN: OTA manager DISABLED[0m
+[0;32mI (856) SENSOR_MGR: Init sensor manager[0m
+[0;32mI (866) MAIN: Sensor manager initialized[0m
+[0;32mI (866) MAIN: Packet manager initialized[0m
+[0;32mI (866) SENSOR_MGR: Starting MPU6050[0m
+[0;31mE (876) MPU: WHO_AM_I failed[0m
+[0;32mI (886) SENSOR_MGR: Starting pulse sensor[0m
+[0;32mI (886) gpio: GPIO[36]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (896) MAIN: System state set to RUNNING[0m
+[0;32mI (896) NimBLE: Failed to restore IRKs from store; status=8
+[0m
+[0;32mI (906) NimBLE: GAP procedure initiated: advertise; [0m
+[0;32mI (906) NimBLE: disc_mode=2[0m
+[0;32mI (906) NimBLE:  adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0[0m
+[0;32mI (916) NimBLE: 
+[0m
+[0;32mI (6896) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (6896) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (12906) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (12906) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (18916) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (18916) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (24926) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (24926) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (30936) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (30936) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (36946) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (36946) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (42956) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (42956) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (48966) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (48966) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (54976) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (54976) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (60986) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (60986) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (66996) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (66996) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (73006) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (73006) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (79016) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (79016) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (85026) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (85026) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (91036) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (91036) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (97046) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (97046) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (103056) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (103056) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (109066) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (109066) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (115076) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (115076) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (121086) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (121086) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (127096) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (127096) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (133106) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (133106) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (139116) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (139116) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (145126) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (145126) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (151136) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (151136) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (157146) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (157146) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (163156) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (163156) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (169166) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (169166) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (175176) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (175176) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (181186) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (181186) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (187196) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+Guru Meditation Error: Core  0 panic'ed (Cache disabled but cached memory region accessed). 
+
+Core  0 register dump:
+PC      : 0x400ffa54  PS      : 0x00060035  A0      : 0x80086253  A1      : 0x3ffbf1c0  
+A2      : 0x00000000  A3      : 0x3ffb69a8  A4      : 0x8008568a  A5      : 0x3ffd2090  
+A6      : 0x3ffcf6d8  A7      : 0x00000000  A8      : 0x80086188  A9      : 0x00000000  
+A10     : 0x3ffcf6dc  A11     : 0x3ffd00ec  A12     : 0x3ffbf1c4  A13     : 0x3ffbf1c8  
+A14     : 0x00000001  A15     : 0x3ffc3144  SAR     : 0x00000004  EXCCAUSE: 0x00000007  
+EXCVADDR: 0x00000000  LBEG    : 0x400014fd  LEND    : 0x4000150d  LCOUNT  : 0xfffffffd  
+
+
+Backtrace: 0x400ffa51:0x3ffbf1c0 0x40086250:0x3ffbf200 0x40083b65:0x3ffbf220 0x40097a79:0x3ffd2070 0x40097d58:0x3ffd2090 0x4008503f:0x3ffd2110 0x400e9ec2:0x3ffd2150 0x400e8085:0x3ffd2180 0x400e83e3:0x3ffd21a0 0x400d7f91:0x3ffd21e0 0x400d7ff2:0x3ffd2270 0x400914f9:0x3ffd2290
+
+
+
+
+ELF file SHA256: 07fcc5927
+
+Rebooting...
+ets Jul 29 2019 12:21:46
+
+rst:0x3 (SW_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:7176
+load:0x40078000,len:15564
+ho 0 tail 12 room 4
+load:0x40080400,len:4
+load:0x40080404,len:3904
+entry 0x40080640
+[0;32mI (30) boot: ESP-IDF v5.3.1-dirty 2nd stage bootloader[0m
+[0;32mI (30) boot: compile time Jan 27 2026 04:03:06[0m
+[0;32mI (30) boot: Multicore bootloader[0m
+[0;32mI (36) boot: chip revision: v3.1[0m
+[0;32mI (39) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (44) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (48) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (53) boot: Enabling RNG early entropy source...[0m
+[0;32mI (58) boot: Partition Table:[0m
+[0;32mI (62) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (69) boot:  0 nvs              WiFi data        01 02 00009000 00005000[0m
+[0;32mI (77) boot:  1 otadata          OTA data         01 00 0000e000 00002000[0m
+[0;32mI (84) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (92) boot:  3 ota_0            OTA app          00 10 00110000 00100000[0m
+[0;32mI (99) boot:  4 ota_1            OTA app          00 11 00210000 00100000[0m
+[0;32mI (107) boot:  5 offline_data     Unknown data     01 40 00310000 000f0000[0m
+[0;32mI (114) boot: End of partition table[0m
+[0;32mI (119) boot: Defaulting to factory image[0m
+[0;32mI (123) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=192b0h (103088) map[0m
+[0;32mI (167) esp_image: segment 1: paddr=000292d8 vaddr=3ffbdb60 size=04d74h ( 19828) load[0m
+[0;32mI (175) esp_image: segment 2: paddr=0002e054 vaddr=40080000 size=01fc4h (  8132) load[0m
+[0;32mI (178) esp_image: segment 3: paddr=00030020 vaddr=400d0020 size=58490h (361616) map[0m
+[0;32mI (305) esp_image: segment 4: paddr=000884b8 vaddr=40081fc4 size=16c20h ( 93216) load[0m
+[0;32mI (355) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (355) boot: Disabling RNG early entropy source...[0m
+[0;32mI (367) cpu_start: Multicore app[0m
+[0;32mI (375) cpu_start: Pro cpu start user code[0m
+[0;32mI (375) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (375) app_init: Application information:[0m
+[0;32mI (378) app_init: Project name:     test_DAS[0m
+[0;32mI (383) app_init: App version:      c4b6500-dirty[0m
+[0;32mI (388) app_init: Compile time:     Jan 27 2026 04:03:01[0m
+[0;32mI (394) app_init: ELF file SHA256:  07fcc5927...[0m
+[0;32mI (400) app_init: ESP-IDF:          v5.3.1-dirty[0m
+[0;32mI (405) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (410) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (415) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (420) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (427) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM[0m
+[0;32mI (433) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM[0m
+[0;32mI (439) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM[0m
+[0;32mI (445) heap_init: At 3FFC56F8 len 0001A908 (106 KiB): DRAM[0m
+[0;32mI (451) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (457) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (464) heap_init: At 40098BE4 len 0000741C (29 KiB): IRAM[0m
+[0;32mI (472) spi_flash: detected chip: generic[0m
+[0;32mI (475) spi_flash: flash io: dio[0m
+[0;33mW (479) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (490) coexist: coex firmware version: 4482466[0m
+[0;32mI (496) main_task: Started on CPU0[0m
+[0;32mI (506) main_task: Calling app_main()[0m
+[0;32mI (506) MAIN: System boot[0m
+[0;32mI (506) MAIN: System state initialized[0m
+[0;32mI (506) offline_storage: Using partition 'offline_data' @0x00310000 size=983040[0m
+[0;32mI (516) MAIN: Offline storage initialized, count=2[0m
+[0;32mI (526) BTDM_INIT: BT controller compile version [b022216][0m
+[0;32mI (526) BTDM_INIT: Bluetooth MAC: ec:e3:34:b3:48:72[0m
+[0;32mI (536) phy_init: phy_version 4830,54550f7,Jun 20 2024,14:22:08[0m
+[0;33mW (616) phy_init: saving new calibration data because of checksum failure, mode(0)[0m
+[0;32mI (866) MAIN: Bluetooth initialized[0m
+[0;33mW (876) MAIN: OTA manager DISABLED[0m
+[0;32mI (876) SENSOR_MGR: Init sensor manager[0m
+[0;32mI (876) MAIN: Sensor manager initialized[0m
+[0;32mI (876) MAIN: Packet manager initialized[0m
+[0;32mI (886) SENSOR_MGR: Starting MPU6050[0m
+[0;31mE (896) MPU: WHO_AM_I failed[0m
+[0;32mI (896) SENSOR_MGR: Starting pulse sensor[0m
+[0;32mI (896) gpio: GPIO[36]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (906) MAIN: System state set to RUNNING[0m
+[0;32mI (916) NimBLE: Failed to restore IRKs from store; status=8
+[0m
+[0;32mI (916) NimBLE: GAP procedure initiated: advertise; [0m
+[0;32mI (916) NimBLE: disc_mode=2[0m
+[0;32mI (926) NimBLE:  adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0[0m
+[0;32mI (936) NimBLE: 
+[0m
+[0;32mI (6906) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (6906) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (12916) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (12916) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (18926) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (18926) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (24936) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (24936) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (30946) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (30946) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (36956) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (36956) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (42966) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (42966) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (48976) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (48976) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (54986) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (54986) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (60996) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (60996) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (67006) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_sum0=1000[0m
+[0;32mI (67006) OFF_DUMP: ts=123456789 imu_n=50 pulse_n=60 pulse[min=100 max=900 sum=30000] imu_max0=100 imu_min0=-100 imu_su

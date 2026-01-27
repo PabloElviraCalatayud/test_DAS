@@ -1,0 +1,21 @@
+[1/11] Performing build step for 'bootloader'
+[1/1] cmd.exe /C "cd /D C:\Users\sepan\esp_projects\test_DAS\test_DAS\build\bootloader\esp-idf\esptool_py && C:\Espressif\python_env\idf5.3_py3.11_env\Scripts\python.exe C:/Espressif/frameworks/esp-idf-v5.3.1/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x1000 C:/Users/sepan/esp_projects/test_DAS/test_DAS/build/bootloader/bootloader.bin"
+Bootloader binary size 0x6880 bytes. 0x780 bytes (7%) free.
+[2/9] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
+[3/9] Building C object esp-idf/sensor_manager/CMakeFiles/__idf_sensor_manager.dir/sensor_manager.c.obj
+C:/Users/sepan/esp_projects/test_DAS/test_DAS/components/sensor_manager/sensor_manager.c: In function 'offline_task':
+C:/Users/sepan/esp_projects/test_DAS/test_DAS/components/sensor_manager/sensor_manager.c:60:18: warning: unused variable 'hour_ms' [-Wunused-variable]
+   60 |   const uint32_t hour_ms = 3600u * 1000u;
+      |                  ^~~~~~~
+[4/9] Linking C static library esp-idf\sensor_manager\libsensor_manager.a
+[5/9] Linking C static library esp-idf\main\libmain.a
+[6/9] Generating ld/sections.ld
+[7/9] Linking CXX executable test_DAS.elf
+[8/9] Generating binary image from built executable
+esptool.py v4.8.1
+Creating esp32 image...
+Merged 2 ELF sections
+Successfully created esp32 image.
+Generated C:/Users/sepan/esp_projects/test_DAS/test_DAS/build/test_DAS.bin
+[9/9] cmd.exe /C "cd /D C:\Users\sepan\esp_projects\test_DAS\test_DAS\build\esp-idf\esptool_py && C:\Espressif\python_env\idf5.3_py3.11_env\Scripts\python.exe C:/Espressif/frameworks/esp-idf-v5.3.1/components/partition_table/check_sizes.py --offset 0x8000 partition --type app C:/Users/sepan/esp_projects/test_DAS/test_DAS/build/partition_table/partition-table.bin C:/Users/sepan/esp_projects/test_DAS/test_DAS/build/test_DAS.bin"
+test_DAS.bin binary size 0x8f1b0 bytes. Smallest app partition is 0x100000 bytes. 0x70e50 bytes (44%) free.

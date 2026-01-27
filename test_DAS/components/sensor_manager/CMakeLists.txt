@@ -6,6 +6,7 @@ idf_component_register(
   REQUIRES
     system
     hw
+    offline_storage
 )
 
 

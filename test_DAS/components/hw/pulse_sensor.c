@@ -7,6 +7,9 @@
 #include "esp_timer.h"
 #include "esp_log.h"
 
+#include "offline_agg.h"
+
+
 static adc_continuous_handle_t s_adc;
 static TaskHandle_t s_task;
 static bool s_running;
@@ -17,7 +20,8 @@ static void pulse_task(void *arg) {
   while (s_running) {
     int n = adc_driver_read_multi(s_adc, &res, 1);
     if (n > 0) {
-      ESP_LOGI("PULSE", "RAW=%u ts=%llu", res.average, esp_timer_get_time() / 1000ULL);
+      //ESP_LOGI("PULSE", "RAW=%u ts=%llu", res.average, esp_timer_get_time() / 1000ULL);
+      offline_agg_update_pulse((uint16_t)res.average);
       packet_feed_pulse_raw(res.average, esp_timer_get_time() / 1000ULL);
     }
     vTaskDelay(pdMS_TO_TICKS(20));

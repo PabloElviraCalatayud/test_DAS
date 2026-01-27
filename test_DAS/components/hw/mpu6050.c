@@ -10,6 +10,9 @@
 #include "packet_manager.h"
 #include "system_state.h"
 
+#include "offline_agg.h"
+
+
 #define MPU_ADDR        0x68
 #define REG_PWR_MGMT_1  0x6B
 #define REG_ACCEL_XOUT  0x3B
@@ -55,6 +58,10 @@ static void mpu6050_task(void *arg) {
       int16_t gx = (raw[8] << 8) | raw[9];
       int16_t gy = (raw[10] << 8) | raw[11];
       int16_t gz = (raw[12] << 8) | raw[13];
+      
+      int16_t imu6[6] = { ax, ay, az, gx, gy, gz };
+      offline_agg_update_imu(imu6);
+
 
       packet_feed_imu_raw(
         ax, ay, az,

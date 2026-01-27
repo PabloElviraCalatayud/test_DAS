@@ -14,5 +14,6 @@ idf_component_register(
     esp_driver_i2c
     system
     sensor_manager
+    offline_storage
 )
 

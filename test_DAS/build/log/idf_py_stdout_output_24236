@@ -1,0 +1,23 @@
+[1/13] Performing build step for 'bootloader'
+[1/1] cmd.exe /C "cd /D C:\Users\sepan\esp_projects\test_DAS\test_DAS\build\bootloader\esp-idf\esptool_py && C:\Espressif\python_env\idf5.3_py3.11_env\Scripts\python.exe C:/Espressif/frameworks/esp-idf-v5.3.1/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x1000 C:/Users/sepan/esp_projects/test_DAS/test_DAS/build/bootloader/bootloader.bin"
+Bootloader binary size 0x6880 bytes. 0x780 bytes (7%) free.
+[2/11] Building C object esp-idf/offline_storage/CMakeFiles/__idf_offline_storage.dir/offline_agg.c.obj
+[3/11] Linking C static library esp-idf\offline_storage\liboffline_storage.a
+[4/11] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
+[5/11] Building C object esp-idf/sensor_manager/CMakeFiles/__idf_sensor_manager.dir/sensor_manager.c.obj
+C:/Users/sepan/esp_projects/test_DAS/test_DAS/components/sensor_manager/sensor_manager.c: In function 'offline_task':
+C:/Users/sepan/esp_projects/test_DAS/test_DAS/components/sensor_manager/sensor_manager.c:44:18: warning: unused variable 'hour_ms' [-Wunused-variable]
+   44 |   const uint32_t hour_ms = 3600u * 1000u;
+      |                  ^~~~~~~
+[6/11] Linking C static library esp-idf\sensor_manager\libsensor_manager.a
+[7/11] Linking C static library esp-idf\main\libmain.a
+[8/11] Generating ld/sections.ld
+[9/11] Linking CXX executable test_DAS.elf
+[10/11] Generating binary image from built executable
+esptool.py v4.8.1
+Creating esp32 image...
+Merged 2 ELF sections
+Successfully created esp32 image.
+Generated C:/Users/sepan/esp_projects/test_DAS/test_DAS/build/test_DAS.bin
+[11/11] cmd.exe /C "cd /D C:\Users\sepan\esp_projects\test_DAS\test_DAS\build\esp-idf\esptool_py && C:\Espressif\python_env\idf5.3_py3.11_env\Scripts\python.exe C:/Espressif/frameworks/esp-idf-v5.3.1/components/partition_table/check_sizes.py --offset 0x8000 partition --type app C:/Users/sepan/esp_projects/test_DAS/test_DAS/build/partition_table/partition-table.bin C:/Users/sepan/esp_projects/test_DAS/test_DAS/build/test_DAS.bin"
+test_DAS.bin binary size 0x8f140 bytes. Smallest app partition is 0x100000 bytes. 0x70ec0 bytes (44%) free.
