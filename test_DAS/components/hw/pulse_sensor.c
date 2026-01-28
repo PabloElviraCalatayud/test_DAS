@@ -3,6 +3,7 @@
 
 #include "adc.h"
 #include "packet_manager.h"
+#include "sensor_display.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -28,17 +29,21 @@ static void pulse_task(void *arg) {
       continue;
     }
 
-    // Verificación adicional justo antes de leer
     if (!s_running) {
       break;
     }
 
     int n = adc_driver_read_multi(s_adc, &res, 1);
     if (n > 0) {
+      uint16_t raw = res.average;
+
       packet_feed_pulse_raw(
-        res.average,
+        raw,
         esp_timer_get_time() / 1000ULL
       );
+
+      
+    sensor_display_feed_pulse_raw(raw,esp_timer_get_time() / 1000ULL);
     }
 
     vTaskDelay(pdMS_TO_TICKS(20));
@@ -64,7 +69,7 @@ void pulse_sensor_start(TaskHandle_t *out_task) {
     ESP_LOGE(TAG, "Failed to init ADC");
     return;
   }
-  
+
   s_running = true;
 
   xTaskCreatePinnedToCore(
@@ -78,7 +83,7 @@ void pulse_sensor_start(TaskHandle_t *out_task) {
   );
 
   if (out_task) *out_task = s_task;
-  
+
   ESP_LOGI(TAG, "Pulse sensor started");
 }
 
@@ -87,39 +92,35 @@ void pulse_sensor_stop(void) {
     ESP_LOGW(TAG, "Not running");
     return;
   }
-  
+
   ESP_LOGI(TAG, "Requesting stop...");
-  
-  // CRÍTICO: Primero detener el ADC para liberar adc_driver_read_multi()
-  ESP_LOGI(TAG, "Stopping ADC first to unblock task...");
+
   if (s_adc) {
     adc_continuous_stop(s_adc);
   }
-  
-  // LUEGO señalizar parada
+
   s_running = false;
-  
-  // Esperar a que la tarea termine
+
   if (xSemaphoreTake(s_stop_sem, pdMS_TO_TICKS(1000)) == pdTRUE) {
     ESP_LOGI(TAG, "Task exited, completing ADC cleanup...");
-    
-    // Completar limpieza del ADC
+
     if (s_adc) {
       vTaskDelay(pdMS_TO_TICKS(50));
       adc_continuous_deinit(s_adc);
       s_adc = NULL;
     }
+
     s_task = NULL;
-    
     ESP_LOGI(TAG, "Cleanup complete");
   } else {
     ESP_LOGE(TAG, "TIMEOUT waiting for task! Force cleanup...");
-    
-    // Limpieza de emergencia
+
     if (s_adc) {
       adc_continuous_deinit(s_adc);
       s_adc = NULL;
     }
+
     s_task = NULL;
   }
 }
+

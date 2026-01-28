@@ -62,7 +62,7 @@ static void oled_task(void *arg) {
   int16_t az;
 
   while (1) {
-    pulse = sensor_display_get_pulse();
+    pulse = sensor_display_get_pulse_bpm();
     sensor_display_get_accel(&ax, &ay, &az);
 
     oled_show(&dev, pulse, ax, ay, az);

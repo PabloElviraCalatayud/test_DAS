@@ -9,6 +9,7 @@
 #include "esp_timer.h"
 
 #include "packet_manager.h"
+#include "sensor_display.h"
 #include "system_state.h"
 
 #define TAG "MPU"
@@ -65,13 +66,18 @@ static void mpu6050_task(void *arg) {
         gx, gy, gz,
         esp_timer_get_time() / 1000ULL
       );
+
+      sensor_display_feed_imu_raw(
+        ax, ay, az,
+        gx, gy, gz
+      );
     }
 
     vTaskDelay(pdMS_TO_TICKS(20));
   }
 
   ESP_LOGI(TAG, "Task loop exited");
-  
+
   xSemaphoreGive(s_stop_sem);
   vTaskDelete(NULL);
 }
@@ -126,27 +132,27 @@ esp_err_t mpu6050_start(
   );
 
   if (out) *out = s_task;
-  
+
   ESP_LOGI(TAG, "MPU6050 started");
-  
+
   return ESP_OK;
 }
 
 void mpu6050_stop(void) {
   if (!s_task) return;
-  
+
   ESP_LOGI(TAG, "Requesting stop...");
   s_running = false;
-  
+
   if (s_stop_sem && xSemaphoreTake(s_stop_sem, pdMS_TO_TICKS(500)) == pdTRUE) {
     ESP_LOGI(TAG, "Task loop exited, cleaning up I2C...");
-    
-    // Limpieza desde sensor_manager_task
+
     i2c_driver_delete(s_port);
     s_task = NULL;
-    
+
     ESP_LOGI(TAG, "I2C cleanup complete");
   } else {
     ESP_LOGE(TAG, "TIMEOUT waiting for task!");
   }
 }
+
