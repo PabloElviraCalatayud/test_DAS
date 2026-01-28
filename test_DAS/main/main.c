@@ -6,6 +6,7 @@
 #include "sensor_manager.h"
 #include "ota_manager.h"
 #include "packet_manager.h"
+#include "OLED.h"
 #include "sensor_test.h"
 
 /* =========================================================
@@ -36,6 +37,10 @@ void app_main(void) {
 #endif
 
   system_state_set(SYS_STATE_RUNNING);
+  
+  
+  OLED_start();
+  
 
   while (1) {
     vTaskDelay(pdMS_TO_TICKS(1000));

@@ -41,7 +41,7 @@ static void ble_tx_task(void *arg) {
   ble_packet_t pkt;
   while (1) {
     if (xQueueReceive(ble_tx_queue, &pkt, portMAX_DELAY)) {
-      if (system_state_get() == SYS_STATE_OTA) {  // ❌ Bloquea ACKs
+      if (system_state_get() == SYS_STATE_OTA) {  // Bloquea ACKs
         continue;
       }
       bluetooth_notify(pkt.data, pkt.len);
@@ -55,7 +55,7 @@ Además, `bluetooth_tx_enqueue()` rechazaba directamente los envíos:
 ```c
 // CÓDIGO PROBLEMÁTICO
 bool bluetooth_tx_enqueue(const uint8_t *data, uint16_t len) {
-  if (system_state_get() == SYS_STATE_OTA) {  // ❌ Rechaza ACKs
+  if (system_state_get() == SYS_STATE_OTA) {  // Rechaza ACKs
     return false;
   }
   // ...
@@ -157,7 +157,7 @@ void ota_manager_handle_packet(const uint8_t *data, uint16_t len) {
 void system_state_set(system_state_t state) {
   xSemaphoreTake(s_mutex, portMAX_DELAY);
   
-  if (s_state == state) {  // ✅ Verificar cambio real
+  if (s_state == state) {  // Verificar cambio real
     xSemaphoreGive(s_mutex);
     return;
   }
@@ -197,7 +197,7 @@ La tarea `pulse_task` quedaba bloqueada en `adc_driver_read_multi()` esperando d
 static void pulse_task(void *arg) {
   while (s_running) {
     // ...
-    int n = adc_driver_read_multi(s_adc, &res, 1);  // ❌ Bloqueo 20ms
+    int n = adc_driver_read_multi(s_adc, &res, 1);  // Bloqueo 20ms
     // ...
     vTaskDelay(pdMS_TO_TICKS(20));
   }
@@ -207,7 +207,7 @@ static void pulse_task(void *arg) {
 
 void pulse_sensor_stop(void) {
   s_running = false;
-  xSemaphoreTake(s_stop_sem, pdMS_TO_TICKS(500));  // ❌ Timeout, tarea bloqueada
+  xSemaphoreTake(s_stop_sem, pdMS_TO_TICKS(500));  // Timeout, tarea bloqueada
 }
 ```
 
@@ -221,7 +221,7 @@ void pulse_sensor_stop(void) {
   
   ESP_LOGI(TAG, "Stopping ADC first to unblock task...");
   if (s_adc) {
-    adc_continuous_stop(s_adc);  // ✅ Libera adc_continuous_read()
+    adc_continuous_stop(s_adc);  // Libera adc_continuous_read()
   }
   
   s_running = false;  // Ahora la tarea puede salir
@@ -229,7 +229,7 @@ void pulse_sensor_stop(void) {
   if (xSemaphoreTake(s_stop_sem, pdMS_TO_TICKS(1000)) == pdTRUE) {
     if (s_adc) {
       vTaskDelay(pdMS_TO_TICKS(50));
-      adc_continuous_deinit(s_adc);  // ✅ Limpieza desde fuera
+      adc_continuous_deinit(s_adc);  // Limpieza desde fuera
       s_adc = NULL;
     }
     s_task = NULL;
@@ -272,7 +272,7 @@ static void pulse_task(void *arg) {
     // ...
   }
   
-  adc_driver_deinit(s_adc);  // ❌ La propia tarea destruye su recurso
+  adc_driver_deinit(s_adc);  // La propia tarea destruye su recurso
   xSemaphoreGive(s_stop_sem);
   vTaskDelete(NULL);
 }
@@ -297,7 +297,7 @@ void adc_driver_deinit(adc_continuous_handle_t handle) {
 static void pulse_task(void *arg) {
   while (s_running) { /* ... */ }
   
-  vTaskDelay(pdMS_TO_TICKS(100));  // ❌ Delay no cambia ownership
+  vTaskDelay(pdMS_TO_TICKS(100));  // Delay no cambia ownership
   adc_driver_deinit(s_adc);
   xSemaphoreGive(s_stop_sem);
   vTaskDelete(NULL);
@@ -320,7 +320,7 @@ static void pulse_task(void *arg) {
     vTaskDelay(pdMS_TO_TICKS(20));
   }
   
-  // ✅ Solo señaliza salida, NO toca hardware
+  // Solo señaliza salida, NO toca hardware
   xSemaphoreGive(s_stop_sem);
   vTaskDelete(NULL);
 }
@@ -328,7 +328,7 @@ static void pulse_task(void *arg) {
 void pulse_sensor_stop(void) {
   if (!s_task) return;
   
-  // ✅ Detener ADC desde ESTA tarea (sensor_manager_task)
+  // Detener ADC desde ESTA tarea (sensor_manager_task)
   if (s_adc) {
     adc_continuous_stop(s_adc);
   }
@@ -336,7 +336,7 @@ void pulse_sensor_stop(void) {
   s_running = false;
   
   if (xSemaphoreTake(s_stop_sem, pdMS_TO_TICKS(1000)) == pdTRUE) {
-    // ✅ Limpieza desde el manager
+    // Limpieza desde el manager
     if (s_adc) {
       vTaskDelay(pdMS_TO_TICKS(50));
       adc_continuous_deinit(s_adc);
@@ -365,7 +365,7 @@ Mismo error potencial con el sensor I2C:
 static void mpu6050_task(void *arg) {
   while (s_running) { /* leer I2C */ }
   
-  i2c_driver_delete(s_port);  // ❌ Tarea destruye su propio driver
+  i2c_driver_delete(s_port);  // Tarea destruye su propio driver
   vTaskDelete(NULL);
 }
 ```
@@ -384,7 +384,7 @@ static void mpu6050_task(void *arg) {
     vTaskDelay(pdMS_TO_TICKS(20));
   }
   
-  // ✅ Solo señaliza
+  // Solo señaliza
   xSemaphoreGive(s_stop_sem);
   vTaskDelete(NULL);
 }
@@ -395,7 +395,7 @@ void mpu6050_stop(void) {
   s_running = false;
   
   if (xSemaphoreTake(s_stop_sem, pdMS_TO_TICKS(500)) == pdTRUE) {
-    // ✅ Limpieza desde sensor_manager_task
+    // Limpieza desde sensor_manager_task
     i2c_driver_delete(s_port);
     s_task = NULL;
   }
