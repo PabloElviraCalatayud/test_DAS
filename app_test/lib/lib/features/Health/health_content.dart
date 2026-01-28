@@ -3,16 +3,21 @@ import 'package:flutter/material.dart';
 
 import '../../data/health/health_store.dart';
 import '../../data/health/health_state.dart';
+import '../../data/sensors/pulse/pulse_store.dart';
+import '../../data/sensors/pulse/pulse_sample.dart';
+
+import '../../shared/widgets/bpm_history_chart.dart';
 import '../../shared/widgets/health_card.dart';
 import '../../shared/widgets/sleep_score_card.dart';
 
-
 class HealthContent extends StatefulWidget {
   final HealthStore healthStore;
+  final PulseStore pulseStore;
 
   const HealthContent({
     super.key,
     required this.healthStore,
+    required this.pulseStore,
   });
 
   @override
@@ -20,41 +25,69 @@ class HealthContent extends StatefulWidget {
 }
 
 class _HealthContentState extends State<HealthContent> {
-  StreamSubscription? _sub;
+  StreamSubscription? _healthSub;
+  final List<PulseSample> _history = [];
 
   @override
   void initState() {
     super.initState();
-    _sub = widget.healthStore.stream.listen((_) {
+
+    _healthSub = widget.healthStore.stream.listen((_) {
+      final avgBpm = widget.healthStore.state.avgBpm;
+
+      if (avgBpm > 0) {
+        _history.add(
+          PulseSample(
+            raw: 0,
+            timestampMs: DateTime.now().millisecondsSinceEpoch,
+            bpm: avgBpm,
+          ),
+        );
+      }
+
       if (mounted) setState(() {});
     });
   }
 
   @override
   void dispose() {
-    _sub?.cancel();
+    _healthSub?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final HealthState state = widget.healthStore.state;
+    final HealthState healthState = widget.healthStore.state;
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         HealthCard(
           title: 'Pulso cardíaco',
-          value: state.avgBpm == 0
+          value: healthState.avgBpm == 0
               ? '—'
-              : '${state.avgBpm.round()} BPM',
-          subtitle: _pulseLabel(state.avgBpm),
+              : '${healthState.avgBpm.round()} BPM',
+          subtitle: _pulseLabel(healthState.avgBpm),
           icon: Icons.favorite,
         ),
         const SizedBox(height: 16),
+
+        HealthCard(
+          title: 'Eventos de apnea',
+          value: '${healthState.apneaCount}',
+          subtitle: _apneaLabel(healthState.apneaCount),
+          icon: Icons.air,
+        ),
+        const SizedBox(height: 16),
+
+        BpmHistoryChart(
+          samples: _history,
+        ),
+        const SizedBox(height: 16),
+
         SleepScoreCard(
-          score: state.sleepScore,
-          movementIndex: state.movementIndex,
+          score: healthState.sleepScore,
+          movementIndex: healthState.movementIndex,
         ),
       ],
     );
@@ -65,5 +98,12 @@ class _HealthContentState extends State<HealthContent> {
     if (bpm < 50) return 'Bajo';
     if (bpm <= 100) return 'Normal';
     return 'Alto';
+  }
+
+  String _apneaLabel(int count) {
+    if (count == 0) return 'Sin eventos';
+    if (count < 3) return 'Leve';
+    if (count < 6) return 'Moderado';
+    return 'Severo';
   }
 }

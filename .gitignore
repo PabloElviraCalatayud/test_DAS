@@ -1,0 +1,18 @@
+# ESP-IDF / CMake
+build/
+sdkconfig.old
+
+# Ninja
+.ninja_*
+
+# Compilados
+*.o
+*.obj
+*.elf
+*.map
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
