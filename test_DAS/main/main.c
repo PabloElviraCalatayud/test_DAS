@@ -12,7 +12,8 @@
 /* =========================================================
  *  CONFIGURACIÓN DE MODO
  * ========================================================= */
-#define SENSOR_SIMULATION_MODE  1
+#define SENSOR_SIMULATION_MODE  0
+
 /*  1 = Simulación
  *  0 = Sensores reales
  */

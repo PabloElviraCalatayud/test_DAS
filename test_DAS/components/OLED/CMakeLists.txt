@@ -10,5 +10,5 @@ idf_component_register(
     
     
   PRIV_REQUIRES
-	driver freertos esp_adc esp_driver_gpio ssd1306
+	sensor_manager driver freertos esp_adc esp_driver_gpio ssd1306
 )
