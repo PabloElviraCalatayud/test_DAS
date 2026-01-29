@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -8,6 +9,7 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
 #include "esp_nimble_hci.h"
+#include "esp_mac.h"
 
 #include "nimble/nimble_port.h"
 #include "nimble/nimble_port_freertos.h"
@@ -36,6 +38,8 @@ static uint16_t tx_handle;
 static uint8_t own_addr_type;
 static bool notify_enabled;
 
+static char ble_name[16];
+
 static ble_uuid128_t svc_uuid = BLE_UUID128_INIT(
   0x01,0x00,0x00,0x00,0xef,0xbe,0xad,0xde,
   0xbe,0xef,0xde,0xad,0xbe,0xef,0xde,0xad
@@ -56,14 +60,6 @@ static int chr_tx_access_cb(uint16_t c, uint16_t a, struct ble_gatt_access_ctxt 
 }
 
 static int chr_rx_access_cb(uint16_t c, uint16_t a, struct ble_gatt_access_ctxt *ctxt, void *arg) {
-  ESP_LOGI(TAG, "RX: received %d bytes", ctxt->om->om_len);
-  
-  if (ctxt->om->om_len >= 5) {
-    ESP_LOGI(TAG, "RX data: cmd=0x%02X seq=%d", 
-             ctxt->om->om_data[0], 
-             ctxt->om->om_data[1] | (ctxt->om->om_data[2] << 8));
-  }
-  
   ota_manager_handle_packet(ctxt->om->om_data, ctxt->om->om_len);
   return 0;
 }
@@ -99,7 +95,6 @@ static int gap_event_cb(struct ble_gap_event *event, void *arg) {
       if (event->connect.status == 0) {
         conn_handle = event->connect.conn_handle;
         notify_enabled = false;
-        ESP_LOGI(TAG, "Device CONNECTED, handle=%d", conn_handle);
         system_state_set(SYS_STATE_RUNNING);
       } else {
         ble_advertise();
@@ -107,7 +102,6 @@ static int gap_event_cb(struct ble_gap_event *event, void *arg) {
       break;
 
     case BLE_GAP_EVENT_DISCONNECT:
-      ESP_LOGW(TAG, "Device DISCONNECTED");
       conn_handle = BLE_HS_CONN_HANDLE_NONE;
       notify_enabled = false;
       ble_advertise();
@@ -116,7 +110,6 @@ static int gap_event_cb(struct ble_gap_event *event, void *arg) {
     case BLE_GAP_EVENT_SUBSCRIBE:
       if (event->subscribe.attr_handle == tx_handle) {
         notify_enabled = event->subscribe.cur_notify;
-        ESP_LOGI(TAG, "Notify %s", notify_enabled ? "ENABLED" : "DISABLED");
       }
       break;
 
@@ -131,8 +124,8 @@ static void ble_advertise(void) {
   struct ble_hs_adv_fields fields = {0};
 
   fields.flags = BLE_HS_ADV_F_DISC_GEN | BLE_HS_ADV_F_BREDR_UNSUP;
-  fields.name = (uint8_t *)"ESP32_NIMBLE";
-  fields.name_len = 11;
+  fields.name = (uint8_t *)ble_name;
+  fields.name_len = strlen(ble_name);
   fields.name_is_complete = 1;
 
   ble_gap_adv_set_fields(&fields);
@@ -144,7 +137,13 @@ static void ble_advertise(void) {
 }
 
 static void ble_on_sync(void) {
+  uint8_t mac[6];
+
   ble_hs_id_infer_auto(0, &own_addr_type);
+  esp_read_mac(mac, ESP_MAC_BT);
+
+  snprintf(ble_name, sizeof(ble_name), "DAS-%02X%02X", mac[4], mac[5]);
+
   ble_advertise();
 }
 
@@ -157,7 +156,6 @@ static void ble_tx_task(void *arg) {
 
   while (1) {
     if (xQueueReceive(ble_tx_queue, &pkt, portMAX_DELAY)) {
-      // Permitir envío durante OTA (ACKs)
       bluetooth_notify(pkt.data, pkt.len);
       vTaskDelay(pdMS_TO_TICKS(15));
     }
@@ -167,7 +165,7 @@ static void ble_tx_task(void *arg) {
 void bluetooth_init(void) {
   nvs_flash_init();
 
-  ble_tx_queue = xQueueCreate(16, sizeof(ble_packet_t)); // Aumentado de 8 a 16
+  ble_tx_queue = xQueueCreate(16, sizeof(ble_packet_t));
 
   esp_nimble_hci_init();
   nimble_port_init();
@@ -204,10 +202,10 @@ bool bluetooth_tx_enqueue(const uint8_t *data, uint16_t len) {
     return false;
   }
 
-  // Permitir envío durante OTA para los ACKs
   ble_packet_t pkt;
   pkt.len = len;
   memcpy(pkt.data, data, len);
 
   return xQueueSend(ble_tx_queue, &pkt, pdMS_TO_TICKS(100)) == pdTRUE;
 }
+

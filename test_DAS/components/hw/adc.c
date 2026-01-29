@@ -51,18 +51,17 @@ int adc_driver_read_multi(adc_continuous_handle_t handle, adc_channel_result_t *
     return 0;
   }
 
-  uint16_t peak = 0;
+  uint64_t sum = 0;
   uint32_t count = 0;
 
   for (uint32_t i = 0; i < out_len; i += sizeof(adc_digi_output_data_t)) {
     adc_digi_output_data_t sample;
     memcpy(&sample, &buffer[i], sizeof(sample));
-    uint16_t v = sample.type1.data;
-    if (v > peak) peak = v;
+    sum += sample.type1.data;
     count++;
   }
 
-  results[0].average = peak;
+  results[0].average = count ? (sum / count) : 0;
   return count;
 }
 
@@ -74,10 +73,11 @@ void adc_driver_deinit(adc_continuous_handle_t handle) {
 
   ESP_LOGI(TAG, "Deinitializing ADC handle");
   esp_err_t ret = adc_continuous_deinit(handle);
-  
+
   if (ret != ESP_OK) {
     ESP_LOGE(TAG, "Deinit failed: %s", esp_err_to_name(ret));
   } else {
     ESP_LOGI(TAG, "ADC deinitialized successfully");
   }
 }
+

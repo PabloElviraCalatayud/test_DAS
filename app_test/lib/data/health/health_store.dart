@@ -40,13 +40,19 @@ class HealthStore {
   final List<double> _bpmWindow = [];
   static const int _baselineWindowSize = 20;
 
-  static const double _bpmDropAbsolute = 5.0;
-  static const double _movementLowThreshold = 2.0;
-
   static const Duration _minApneaDuration =
   Duration(seconds: 1);
   static const Duration _maxApneaDuration =
   Duration(seconds: 30);
+
+  void setApneaThresholds({
+    required double bpmDrop,
+    required double movement,
+  }) {
+    _state.bpmDropThreshold = bpmDrop;
+    _state.movementThreshold = movement;
+    _ctrl.add(_state);
+  }
 
   void _onPacket(pkt) {
     if (pkt.pulseSamples.isEmpty) {
@@ -54,7 +60,7 @@ class HealthStore {
     }
 
     final bpm = pkt.pulseSamples.last.bpm;
-    if (bpm == null || bpm <= 0) {
+    if (bpm <= 0) {
       return;
     }
 
@@ -109,10 +115,10 @@ class HealthStore {
     final bpm = _state.avgBpm;
 
     final lowMovement =
-        _state.movementIndex < _movementLowThreshold;
+        _state.movementIndex < _state.movementThreshold;
 
     final bpmDrop =
-        (_baselineBpm - bpm) >= _bpmDropAbsolute;
+        (_baselineBpm - bpm) >= _state.bpmDropThreshold;
 
     final apneaCondition = bpmDrop || lowMovement;
 

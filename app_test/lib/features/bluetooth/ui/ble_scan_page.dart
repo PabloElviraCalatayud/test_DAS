@@ -51,13 +51,13 @@ class BleScanPage extends StatelessWidget {
         ),
         Expanded(
           child: StreamBuilder<List<ScanResult>>(
-            stream: FlutterBluePlus.scanResults,
+            stream: ble.dasScanResults,
             builder: (context, snapshot) {
               final results = snapshot.data ?? [];
 
               if (results.isEmpty) {
                 return const Center(
-                  child: Text('No se han encontrado dispositivos'),
+                  child: Text('No se han encontrado dispositivos DAS'),
                 );
               }
 
@@ -66,7 +66,7 @@ class BleScanPage extends StatelessWidget {
                   final advName = r.advertisementData.advName;
                   final name = advName.isNotEmpty
                       ? advName
-                      : r.device.remoteId.str;
+                      : r.device.name;
 
                   return ListTile(
                     leading: const Icon(Icons.bluetooth),

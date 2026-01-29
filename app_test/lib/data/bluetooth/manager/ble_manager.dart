@@ -34,6 +34,15 @@ class BleManager {
 
   bool _otaActive = false;
 
+  Stream<List<ScanResult>> get dasScanResults {
+    return FlutterBluePlus.scanResults.map((results) {
+      return results.where((r) {
+        final name = r.device.name;
+        return name.isNotEmpty && name.startsWith('DAS');
+      }).toList();
+    });
+  }
+
   void _setState(BleConnectionState s) {
     _state = s;
     _stateCtrl.add(s);
@@ -58,8 +67,13 @@ class BleManager {
     _setState(BleConnectionState.connecting);
     FlutterBluePlus.stopScan();
 
-    try { await device.disconnect(); } catch (_) {}
-    try { await device.removeBond(); } catch (_) {}
+    try {
+      await device.disconnect();
+    } catch (_) {}
+
+    try {
+      await device.removeBond();
+    } catch (_) {}
 
     await device.connect(
       autoConnect: false,

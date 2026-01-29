@@ -7,6 +7,12 @@
 #define GYRO_LSB_PER_DPS  131.0f
 #define GRAVITY_MS2       9.81f
 
+#define MIN_PULSE_INTERVAL_US 300000
+#define MAX_PULSE_INTERVAL_US 1500000
+#define BPM_MIN 40.0f
+#define BPM_MAX 180.0f
+#define INTERVAL_AVG_COUNT 5
+
 static SemaphoreHandle_t s_mutex;
 
 /* ===================== IMU ===================== */
@@ -25,6 +31,10 @@ static float s_threshold = 2000.0f;
 static bool s_pulse_detected;
 static uint32_t s_last_pulse_time_us;
 static float s_last_bpm;
+
+static float s_intervals[INTERVAL_AVG_COUNT];
+static uint8_t s_interval_index;
+static uint8_t s_interval_count;
 
 static void ensure_mutex(void) {
   if (!s_mutex) {
@@ -64,20 +74,37 @@ void sensor_display_feed_pulse_raw(uint16_t raw, uint32_t ts_ms) {
 
   uint32_t now_us = ts_ms * 1000;
 
-  s_threshold = 0.95f * s_threshold + 0.05f * raw;
+  s_threshold = 0.98f * s_threshold + 0.02f * raw;
 
-  if (!s_pulse_detected && raw > s_threshold + 250.0f) {
-    s_pulse_detected = true;
-
+  if (!s_pulse_detected && raw > s_threshold + 300.0f) {
     if (s_last_pulse_time_us > 0) {
-      float interval_s =
-        (now_us - s_last_pulse_time_us) / 1000000.0f;
+      uint32_t interval_us = now_us - s_last_pulse_time_us;
 
-      float bpm = 60.0f / interval_s;
-      s_last_bpm = 0.8f * s_last_bpm + 0.2f * bpm;
+      if (interval_us >= MIN_PULSE_INTERVAL_US &&
+          interval_us <= MAX_PULSE_INTERVAL_US) {
+
+        s_intervals[s_interval_index] = (float)interval_us;
+        s_interval_index = (s_interval_index + 1) % INTERVAL_AVG_COUNT;
+        if (s_interval_count < INTERVAL_AVG_COUNT) {
+          s_interval_count++;
+        }
+
+        float sum = 0.0f;
+        for (uint8_t i = 0; i < s_interval_count; i++) {
+          sum += s_intervals[i];
+        }
+
+        float avg_interval_s = (sum / s_interval_count) / 1000000.0f;
+        float bpm = 60.0f / avg_interval_s;
+
+        if (bpm >= BPM_MIN && bpm <= BPM_MAX) {
+          s_last_bpm = bpm;
+        }
+      }
     }
 
     s_last_pulse_time_us = now_us;
+    s_pulse_detected = true;
   }
 
   if (s_pulse_detected && raw < s_threshold) {
@@ -96,8 +123,10 @@ uint16_t sensor_display_get_pulse_bpm(void) {
   xSemaphoreTake(s_mutex, portMAX_DELAY);
   bpm = (uint16_t)(s_last_bpm + 0.5f);
   xSemaphoreGive(s_mutex);
-
-  return bpm;
+  if(bpm - 100 < 0){
+    return 0;
+  }
+  return bpm - 100;
 }
 
 void sensor_display_get_accel(
