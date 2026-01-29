@@ -27,10 +27,13 @@ class TelemetryStarter {
   );
 
   //Se envian los datos al pulsar boton: sendPulseNow y sendImuNow
-  Future<int> sendPulseTelemetry() async  {
+  Future<int?> sendPulseTelemetry() async  {
     //PulseStore.instance.stream.listen((pulseState){
     //cuando se tenga sensores
-    final pulse = 60 + random.nextInt(41); //final pulse = pulseState.heartRate;
+    final pulseState = PulseStore.instance.state;
+    final pulse = pulseState.heartRate;
+    if (pulse == null) return null;
+
     try {
       await tbService.sendTelemetry({"pulso": pulse});
       print("Pulso enviado: $pulse");
@@ -40,20 +43,11 @@ class TelemetryStarter {
     return pulse;
     //}); cierre de PulseStore.instance...
   }
-  Future<ImuSample> sendImuTelemetry() async {
-    final random = Random();
-    //Simulacion de un sample
-    final sample = ImuSample(
-      ax: random.nextInt(2000) - 1000,
-      ay: random.nextInt(2000) - 1000,
-      az: random.nextInt(2000) - 1000,
-      gx: random.nextInt(500) - 250,
-      gy: random.nextInt(500) - 250,
-      gz: random.nextInt(500) - 250,
-      timestampMs: DateTime.now().millisecondsSinceEpoch,
-    );
 
-    ImuStore.instance.addSample(sample); //se añade
+  Future<ImuSample?> sendImuTelemetry() async {
+    //Simulacion de un sample
+    final sample = ImuStore.instance.state.lastSample;
+    if (sample == null) return null;
 
     final telemetry = {
       "acc_x": sample.axMs2,
@@ -71,8 +65,9 @@ class TelemetryStarter {
     }
     return sample;
   }
-  //Realmente deberia quedar asi:
-  /*
+
+//Realmente deberia quedar asi:
+/*
   void startImuTelemetry() {
 
     ImuStore.instance.stream.listen((imuState) {
