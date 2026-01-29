@@ -5,15 +5,17 @@ idf_component_register(
     .
   REQUIRES
     ota
+    OLED
     hw
     ble
     sensor_test
     packet
-    freertos
     system
     sensor_manager
+    offline_storage
   PRIV_REQUIRES
-    driver freertos esp_adc esp_driver_gpio OLED
-    
+    driver
+    freertos
+    esp_adc
+    esp_driver_gpio
 )
-

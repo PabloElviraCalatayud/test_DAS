@@ -8,5 +8,3 @@ idf_component_register(
     system
     hw
 )
-
-

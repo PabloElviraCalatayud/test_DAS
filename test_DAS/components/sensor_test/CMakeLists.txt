@@ -5,6 +5,5 @@ idf_component_register(
     "."
   REQUIRES
     packet
-    system
 )
 

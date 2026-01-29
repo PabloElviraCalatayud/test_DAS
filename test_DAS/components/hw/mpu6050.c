@@ -11,6 +11,7 @@
 #include "packet_manager.h"
 #include "sensor_display.h"
 #include "system_state.h"
+#include "offline_agg.h"
 
 #define TAG "MPU"
 
@@ -53,6 +54,8 @@ static void mpu6050_task(void *arg) {
       continue;
     }
 
+    if (!s_running) break;
+
     if (mpu_read(REG_ACCEL_XOUT, raw, sizeof(raw)) == ESP_OK) {
       int16_t ax = (raw[0] << 8) | raw[1];
       int16_t ay = (raw[2] << 8) | raw[3];
@@ -61,6 +64,11 @@ static void mpu6050_task(void *arg) {
       int16_t gy = (raw[10] << 8) | raw[11];
       int16_t gz = (raw[12] << 8) | raw[13];
 
+      // Tu parte: agregación offline
+      int16_t imu6[6] = { ax, ay, az, gx, gy, gz };
+      offline_agg_update_imu(imu6);
+
+      // Su parte: paquetes + display
       packet_feed_imu_raw(
         ax, ay, az,
         gx, gy, gz,
@@ -77,8 +85,7 @@ static void mpu6050_task(void *arg) {
   }
 
   ESP_LOGI(TAG, "Task loop exited");
-
-  xSemaphoreGive(s_stop_sem);
+  if (s_stop_sem) xSemaphoreGive(s_stop_sem);
   vTaskDelete(NULL);
 }
 
@@ -134,7 +141,6 @@ esp_err_t mpu6050_start(
   if (out) *out = s_task;
 
   ESP_LOGI(TAG, "MPU6050 started");
-
   return ESP_OK;
 }
 
@@ -144,8 +150,9 @@ void mpu6050_stop(void) {
   ESP_LOGI(TAG, "Requesting stop...");
   s_running = false;
 
+  // Espera a que la task confirme salida ANTES de borrar I2C
   if (s_stop_sem && xSemaphoreTake(s_stop_sem, pdMS_TO_TICKS(500)) == pdTRUE) {
-    ESP_LOGI(TAG, "Task loop exited, cleaning up I2C...");
+    ESP_LOGI(TAG, "Task exited, cleaning up I2C...");
 
     i2c_driver_delete(s_port);
     s_task = NULL;
@@ -153,6 +160,6 @@ void mpu6050_stop(void) {
     ESP_LOGI(TAG, "I2C cleanup complete");
   } else {
     ESP_LOGE(TAG, "TIMEOUT waiting for task!");
+    // En timeout, evita borrar I2C para no romper si la task sigue viva.
   }
 }
-

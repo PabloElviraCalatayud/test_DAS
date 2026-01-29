@@ -4,6 +4,7 @@
 #include "adc.h"
 #include "packet_manager.h"
 #include "sensor_display.h"
+#include "offline_agg.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -35,15 +36,12 @@ static void pulse_task(void *arg) {
 
     int n = adc_driver_read_multi(s_adc, &res, 1);
     if (n > 0) {
-      uint16_t raw = res.average;
+      uint16_t raw = (uint16_t)res.average;
+      uint64_t ts_ms = esp_timer_get_time() / 1000ULL;
 
-      packet_feed_pulse_raw(
-        raw,
-        esp_timer_get_time() / 1000ULL
-      );
-
-      
-    sensor_display_feed_pulse_raw(raw,esp_timer_get_time() / 1000ULL);
+      offline_agg_update_pulse(raw);
+      packet_feed_pulse_raw(raw, ts_ms);
+      sensor_display_feed_pulse_raw(raw, ts_ms);
     }
 
     vTaskDelay(pdMS_TO_TICKS(20));
@@ -57,6 +55,7 @@ static void pulse_task(void *arg) {
 void pulse_sensor_start(TaskHandle_t *out_task) {
   if (s_task) {
     ESP_LOGW(TAG, "Already started");
+    if (out_task) *out_task = s_task;
     return;
   }
 
@@ -101,12 +100,13 @@ void pulse_sensor_stop(void) {
 
   s_running = false;
 
+
   if (xSemaphoreTake(s_stop_sem, pdMS_TO_TICKS(1000)) == pdTRUE) {
     ESP_LOGI(TAG, "Task exited, completing ADC cleanup...");
 
     if (s_adc) {
       vTaskDelay(pdMS_TO_TICKS(50));
-      adc_continuous_deinit(s_adc);
+      adc_driver_deinit(s_adc);        
       s_adc = NULL;
     }
 
@@ -116,11 +116,10 @@ void pulse_sensor_stop(void) {
     ESP_LOGE(TAG, "TIMEOUT waiting for task! Force cleanup...");
 
     if (s_adc) {
-      adc_continuous_deinit(s_adc);
+      adc_driver_deinit(s_adc);
       s_adc = NULL;
     }
 
     s_task = NULL;
   }
 }
-
