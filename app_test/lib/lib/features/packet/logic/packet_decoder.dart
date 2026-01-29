@@ -61,6 +61,10 @@ class PacketDecoder {
     final imuSamples = <ImuSample>[];
     final pulseSamples = <PulseSample>[];
 
+    final tail = data.sublist(80, 88);
+    print('[TAIL] ' + tail.map((e) => e.toRadixString(16).padLeft(2,'0')).join(' '));
+
+    print('[PKT] ts=$ts imuCount=$imuCount pulseCount=$pulseCount');
     int offset = headerSize;
 
     // -----------------------------
@@ -100,6 +104,7 @@ class PacketDecoder {
       final raw = b.getUint16(offset, Endian.little);
 
       final bpm = _pulseBpmCalc.process(raw, ts);
+      print('[PULSE] raw=$raw ts=$ts bpm=$bpm');
 
       final sample = PulseSample(
         raw: raw,

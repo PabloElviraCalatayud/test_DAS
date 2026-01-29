@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
+
+import '../../../core/utils/ble_permissions.dart';
 import '../../../data/bluetooth/manager/ble_manager.dart';
 import 'ota_update_page.dart';
 
@@ -35,13 +37,15 @@ class BleScanPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async{
+                  final ok = await BlePermissions.ensure();
+                  if (!ok) return;
                   ble.scan();
                 },
                 child: const Text('Iniciar escaneo'),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async{
                   FlutterBluePlus.stopScan();
                 },
                 child: const Text('Parar escaneo'),
@@ -53,7 +57,12 @@ class BleScanPage extends StatelessWidget {
           child: StreamBuilder<List<ScanResult>>(
             stream: FlutterBluePlus.scanResults,
             builder: (context, snapshot) {
-              final results = snapshot.data ?? [];
+              final results = (snapshot.data ?? []).where((r) {
+                final adv = r.advertisementData.advName.trim();
+                final plat = r.device.platformName.trim();
+                final name = adv.isNotEmpty ? adv : plat;
+                return name.toUpperCase().startsWith('ESP');
+              }).toList();
 
               if (results.isEmpty) {
                 return const Center(

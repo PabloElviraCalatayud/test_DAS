@@ -4,6 +4,7 @@ import '../../app/app_shell.dart';
 import '../../core/utils/onboarding_storage.dart';
 import '../../shared/widgets/buttons/primary_button.dart';
 import 'onboarding_content.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -75,98 +76,114 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            Column(
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: PageView.builder(
-                    controller: _controller,
-                    itemCount: onboardingData.length,
-                    onPageChanged: (value) {
-                      setState(() {
-                        _currentPage = value;
-                      });
-                    },
-                    itemBuilder: (context, index) => OnboardingContent(
-                      image: onboardingData[index]["image"]!,
-                      title: onboardingData[index]["title"]!,
-                      description:
-                      onboardingData[index]["description"]!,
-                    ),
-                  ),
+            // Botón Saltar minimalista
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextButton(
+                  onPressed: _skip,
+                  child: Text("Saltar", style: TextStyle(color: theme.colorScheme.primary)),
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    onboardingData.length,
-                        (index) => AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 6),
-                      height: 8,
-                      width: _currentPage == index ? 24 : 8,
-                      decoration: BoxDecoration(
-                        color: _currentPage == index
-                            ? colorScheme.primary
-                            : colorScheme.onSurface
-                            .withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 24,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: PrimaryButton(
-                          text: "Atrás",
-                          onPressed: _previousPage,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: PrimaryButton(
-                          text: _currentPage ==
-                              onboardingData.length - 1
-                              ? "Comenzar"
-                              : "Siguiente",
-                          onPressed: _nextPage,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-            Positioned(
-              top: 12,
-              right: 16,
-              child: TextButton(
-                onPressed: _skip,
-                child: Text(
-                  "Saltar",
-                  style: TextStyle(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.bold,
+
+            Expanded(
+              child: PageView.builder(
+                controller: _controller,
+                itemCount: onboardingData.length,
+                onPageChanged: (v) => setState(() => _currentPage = v),
+                itemBuilder: (ctx, idx) => _buildPageContent(onboardingData[idx]),
+              ),
+            ),
+
+            // Indicadores y Botones
+            Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                children: [
+                  // Indicador de página (Puntos)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      onboardingData.length,
+                          (index) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        height: 6,
+                        width: _currentPage == index ? 24 : 6,
+                        decoration: BoxDecoration(
+                          color: _currentPage == index ? theme.colorScheme.primary : const Color(0xFFE0E0E0),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 32),
+                  // Botón Principal Grande
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: FilledButton(
+                      style: FilledButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        backgroundColor: theme.colorScheme.primary,
+                      ),
+                      onPressed: _nextPage,
+                      child: Text(
+                        _currentPage == onboardingData.length - 1 ? "Comenzar" : "Siguiente",
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPageContent(Map<String, String> data) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            data["image"]!,
+            height: 280, // Imagen más grande
+          ),
+          const SizedBox(height: 40),
+          Text(
+            data["title"]!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.5,
+              color: Color(0xFF1A1C1E),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            data["description"]!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 16,
+              height: 1.5,
+              color: Color(0xFF757575),
+            ),
+          ),
+        ],
       ),
     );
   }

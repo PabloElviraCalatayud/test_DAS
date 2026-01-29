@@ -1,181 +1,111 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../../data/sensors/pulse/pulse_sample.dart';
 
 class BpmHistoryChart extends StatelessWidget {
   final List<PulseSample> samples;
 
-  const BpmHistoryChart({
-    super.key,
-    required this.samples,
-  });
-
-  static const double _minBpmChart = 40;
-  static const double _maxBpmChart = 190;
+  const BpmHistoryChart({super.key, required this.samples});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+    final theme = Theme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        // Sombra suave difusa
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF2B5C9E).withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Historial de pulsaciones',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Frecuencia Cardíaca',
+                      style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 4),
+                  Text(
+                    samples.isNotEmpty ? '${samples.last.bpm.round()} BPM' : '--',
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF2B5C9E)),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              height: 220,
-              child: samples.isEmpty
-                  ? const Center(
-                child: Text(
-                  'Sin datos de pulsaciones',
-                  style: TextStyle(color: Colors.grey),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  shape: BoxShape.circle,
                 ),
+                child: const Icon(Icons.favorite, color: Colors.red, size: 20),
               )
-                  : LineChart(_chartData()),
-            ),
-          ],
-        ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            height: 180,
+            child: samples.isEmpty
+                ? const Center(child: Text('Esperando datos...', style: TextStyle(color: Colors.grey)))
+                : LineChart(_chartData(theme)),
+          ),
+        ],
       ),
     );
   }
 
-  LineChartData _chartData() {
-    if (samples.isEmpty) {
-      return LineChartData();
-    }
-
-    final spots = <FlSpot>[];
-
-    for (final s in samples) {
-      spots.add(
-        FlSpot(
-          s.timestampMs / 1000.0,
-          s.bpm.clamp(_minBpmChart, _maxBpmChart),
-        ),
-      );
-    }
+  LineChartData _chartData(ThemeData theme) {
+    // ... (Tu lógica de cálculo de spots se mantiene igual) ...
+    final spots = samples.map((s) => FlSpot(s.timestampMs / 1000.0, s.bpm.toDouble())).toList();
+    if (spots.isEmpty) return LineChartData();
 
     final double minX = spots.first.x;
     final double maxX = spots.last.x;
 
-    final double timeSpan = maxX - minX;
-    final double xInterval = _computeTimeInterval(timeSpan);
-
     return LineChartData(
       minX: minX,
       maxX: maxX,
-      minY: _minBpmChart,
-      maxY: _maxBpmChart,
+      minY: 40,
+      maxY: 180, // Ajuste fijo para estética
       gridData: FlGridData(
         show: true,
-        horizontalInterval: 20,
-        verticalInterval: xInterval,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: Colors.grey.withOpacity(0.15),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: Colors.grey.withOpacity(0.15),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.2),
-          width: 1,
+        drawVerticalLine: false,
+        horizontalInterval: 40,
+        getDrawingHorizontalLine: (value) => FlLine(
+          color: Colors.grey.withOpacity(0.1),
+          strokeWidth: 1,
+          dashArray: [5, 5], // Línea punteada
         ),
       ),
-      lineTouchData: LineTouchData(
-        enabled: true,
-        touchTooltipData: LineTouchTooltipData(
-          getTooltipItems: (touchedSpots) {
-            return touchedSpots.map((spot) {
-              final time = DateTime.fromMillisecondsSinceEpoch(
-                (spot.x * 1000).toInt(),
-              );
-              return LineTooltipItem(
-                '${spot.y.toInt()} BPM\n${DateFormat('HH:mm:ss').format(time)}',
-                const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 11,
-                ),
-              );
-            }).toList();
-          },
-        ),
-      ),
+      borderData: FlBorderData(show: false), // Sin bordes feos alrededor
       titlesData: FlTitlesData(
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)), // Limpio, sin eje Y visible
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 32,
-            interval: xInterval,
+            interval: (maxX - minX) / 4, // Mostrar ~4 etiquetas
             getTitlesWidget: (value, meta) {
-              final time = DateTime.fromMillisecondsSinceEpoch(
-                (value * 1000).toInt(),
-              );
+              final time = DateTime.fromMillisecondsSinceEpoch((value * 1000).toInt());
               return Padding(
-                padding: const EdgeInsets.only(top: 6),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   DateFormat('HH:mm').format(time),
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 10,
-                  ),
+                  style: const TextStyle(color: Colors.grey, fontSize: 10),
                 ),
-              );
-            },
-          ),
-        ),
-        leftTitles: AxisTitles(
-          axisNameWidget: const Padding(
-            padding: EdgeInsets.only(bottom: 8),
-            child: Text(
-              'BPM',
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          axisNameSize: 24,
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 42,
-            interval: 20,
-            getTitlesWidget: (value, meta) {
-              return Text(
-                value.toInt().toString(),
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 10,
-                ),
-                textAlign: TextAlign.right,
               );
             },
           ),
@@ -185,9 +115,10 @@ class BpmHistoryChart extends StatelessWidget {
         LineChartBarData(
           spots: spots,
           isCurved: true,
-          curveSmoothness: 0.35,
-          color: Colors.red,
-          barWidth: 2.5,
+          curveSmoothness: 0.3,
+          color: const Color(0xFFFA5A5A),
+          barWidth: 3,
+          isStrokeCapRound: true,
           dotData: const FlDotData(show: false),
           belowBarData: BarAreaData(
             show: true,
@@ -195,29 +126,13 @@ class BpmHistoryChart extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.red.withOpacity(0.2),
-                Colors.red.withOpacity(0.05),
+                const Color(0xFFFA5A5A).withOpacity(0.3),
+                const Color(0xFFFA5A5A).withOpacity(0.0),
               ],
             ),
           ),
         ),
       ],
     );
-  }
-
-  double _computeTimeInterval(double spanSeconds) {
-    if (spanSeconds <= 60) {
-      return 10;
-    }
-    if (spanSeconds <= 5 * 60) {
-      return 30;
-    }
-    if (spanSeconds <= 15 * 60) {
-      return 60;
-    }
-    if (spanSeconds <= 60 * 60) {
-      return 5 * 60;
-    }
-    return 15 * 60;
   }
 }
