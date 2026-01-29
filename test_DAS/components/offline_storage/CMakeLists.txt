@@ -1,0 +1,11 @@
+idf_component_register(
+  SRCS
+    offline_storage.c
+    offline_agg.c
+  INCLUDE_DIRS
+    .
+  REQUIRES
+    esp_partition
+    spi_flash
+    log
+)
