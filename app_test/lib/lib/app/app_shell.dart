@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../features/Health/health_page.dart';
 import '../features/bluetooth/ui/ble_scan_page.dart';
 import '../features/debug/debug_screen.dart';
+import '../features/debug/debug_tb.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -18,12 +19,14 @@ class _AppShellState extends State<AppShell> {
     HealthPage(),
     BleScanPage(),
     DebugScreen(),
+    DebugTbScreen(),
   ];
 
   final List<String> _titles = const [
     'Health',
     'BLE Scan',
     'Debug',
+    'Debug_TB',
   ];
 
   @override
@@ -43,6 +46,8 @@ class _AppShellState extends State<AppShell> {
             _index = i;
           });
         },
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.health_and_safety),
@@ -55,6 +60,10 @@ class _AppShellState extends State<AppShell> {
           BottomNavigationBarItem(
             icon: Icon(Icons.bug_report),
             label: 'Debug',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.cloud_upload),
+            label: 'Debug TB',
           ),
         ],
       ),
