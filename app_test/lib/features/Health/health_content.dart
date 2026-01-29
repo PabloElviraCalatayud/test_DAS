@@ -129,7 +129,8 @@ class _HealthContentState extends State<HealthContent> {
       visualDensity: VisualDensity.compact,
     );
   }
-
+//Tienen que permitir ajustar el offset para el calculo de las pulsaciones porque da lecturas de 170 pulsaciones y hay que incluir un parametro de calibracion que sume/reste pulsaciones
+// El resto del codigo relevante esta en la carpeta de sensores y la carpeta de health.
   void _calibratePulse() {
     showDialog(
       context: context,
