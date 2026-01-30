@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../features/Health/health_page.dart'; // Asegúrate de que esta ruta exista
+
+import '../features/Health/health_page.dart';
 import '../features/bluetooth/ui/ble_scan_page.dart';
 import '../features/debug/debug_screen.dart';
+import '../features/debug/widgets/debug_tb.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -14,39 +16,32 @@ class _AppShellState extends State<AppShell> {
   int _index = 0;
 
   final List<Widget> _pages = const [
-    HealthPage(), // Esta página debe contener tu DashboardContent
+    HealthPage(),
     BleScanPage(),
     DebugScreen(),
+    DebugTbScreen(),
   ];
 
-  final List<String> _titles = const ['Mi Salud', 'Dispositivos', 'Depuración'];
+  final List<String> _titles = const [
+    'Mi Salud',
+    'Dispositivos',
+    'Depuración',
+    'Debug TB',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AppBar condicional: Solo mostramos título si es necesario
-      appBar: AppBar(
-        title: Text(_titles[_index]),
-        actions: _index == 0
-            ? [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {}, // Futura implementación de notificaciones
-          ),
-          const SizedBox(width: 8),
-        ]
-            : null,
-      ),
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child: _pages[_index],
-      ),
+      appBar: AppBar(title: Text(_titles[_index])),
+      body: IndexedStack(index: _index, children: _pages),
+
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
-        backgroundColor: Colors.white,
-        elevation: 2,
-        shadowColor: Colors.black12,
+
+        // Esto ayuda a que se “note” el 4º tab
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.favorite_border_rounded),
@@ -61,6 +56,10 @@ class _AppShellState extends State<AppShell> {
           NavigationDestination(
             icon: Icon(Icons.terminal_rounded),
             label: 'Debug',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.cloud_upload_rounded),
+            label: 'Debug TB',
           ),
         ],
       ),
