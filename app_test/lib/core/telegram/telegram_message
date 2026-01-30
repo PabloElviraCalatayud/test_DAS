@@ -1,0 +1,8 @@
+import 'package:http/http.dart' as http;
+
+void enviarAlerta() {
+  http.get(Uri.parse(
+    'https://api.telegram.org/bot8319738433:AAGT4LPtvSXo_hgYoctFNeOftLhFhobX2DI/sendMessage'
+    '?chat_id=-1003126572976&text=Pulso%20elevado'
+  ));
+}
