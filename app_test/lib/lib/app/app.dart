@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../core/utils/onboarding_storage.dart';
+import '../core/services/telemetry_starter.dart';
 import 'app_shell.dart';
 import '../features/onboarding/onboarding_page.dart';
 
@@ -11,14 +13,15 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Monitor de Apnea',
-      // DEFINICIÓN DE TEMA MODERNO
+
+      // Tu tema moderno
       theme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.light,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2B5C9E), // Azul médico profesional
-          secondary: const Color(0xFF00BFA5), // Turquesa para estados positivos
-          surface: const Color(0xFFF8F9FC),   // Fondo gris muy claro (cuidado a la vista)
+          seedColor: const Color(0xFF2B5C9E),
+          secondary: const Color(0xFF00BFA5),
+          surface: const Color(0xFFF8F9FC),
         ),
         scaffoldBackgroundColor: const Color(0xFFF8F9FC),
         cardTheme: CardThemeData(
@@ -29,7 +32,6 @@ class App extends StatelessWidget {
           color: Colors.white,
           margin: EdgeInsets.zero,
         ),
-
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFFF8F9FC),
           elevation: 0,
@@ -42,13 +44,35 @@ class App extends StatelessWidget {
           ),
         ),
       ),
+
       home: const _Bootstrap(),
     );
   }
 }
 
-class _Bootstrap extends StatelessWidget {
+class _Bootstrap extends StatefulWidget {
   const _Bootstrap();
+
+  @override
+  State<_Bootstrap> createState() => _BootstrapState();
+}
+
+class _BootstrapState extends State<_Bootstrap> {
+  late final TelemetryStarter _telemetryStarter;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Importante: esto NO debe ir en build()
+    _telemetryStarter = TelemetryStarter();
+
+    // Si quieres, puedes envolverlo en microtask para no bloquear el arranque
+    Future.microtask(() {
+      _telemetryStarter.sendPulseTelemetry();
+      _telemetryStarter.sendImuTelemetry();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

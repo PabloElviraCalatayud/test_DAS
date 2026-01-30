@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+
 import '../../data/sensors/imu/imu_store.dart';
 import '../../data/sensors/pulse/pulse_store.dart';
 import 'widgets/imu_card.dart';
 import 'widgets/pulse_card.dart';
 
-// Asumimos que HealthPage llama a esto o es un wrapper de esto
 class DashboardContent extends StatefulWidget {
   final ImuStore imuStore;
   final PulseStore pulseStore;
@@ -27,8 +27,14 @@ class _DashboardContentState extends State<DashboardContent> {
   @override
   void initState() {
     super.initState();
-    _imuSub = widget.imuStore.stream.listen((_) { if (mounted) setState(() {}); });
-    _pulseSub = widget.pulseStore.stream.listen((_) { if (mounted) setState(() {}); });
+
+    _imuSub = widget.imuStore.stream.listen((_) {
+      if (mounted) setState(() {});
+    });
+
+    _pulseSub = widget.pulseStore.stream.listen((_) {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
@@ -46,18 +52,21 @@ class _DashboardContentState extends State<DashboardContent> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       children: [
-        // Título de sección opcional
         const Padding(
           padding: EdgeInsets.only(bottom: 12),
           child: Text(
-            "Resumen de Hoy",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
+            'Resumen de Hoy',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
           ),
         ),
-        ImuCard(state: imuState), // Asegúrate de actualizar el estilo de estas cards también si es necesario
-        const SizedBox(height: 20),
+        ImuCard(state: imuState),
+        const SizedBox(height: 16),
         PulseCard(state: pulseState),
-        const SizedBox(height: 80), // Espacio extra para el scroll
+        const SizedBox(height: 80), // aire para scroll / bottom nav
       ],
     );
   }

@@ -23,9 +23,7 @@ class HealthStore {
   final HealthState _state = HealthState();
   HealthState get state => _state;
 
-  final StreamController<HealthState> _ctrl =
-  StreamController.broadcast();
-
+  final StreamController<HealthState> _ctrl = StreamController.broadcast();
   Stream<HealthState> get stream => _ctrl.stream;
 
   ImuSample? _lastImu;
@@ -40,23 +38,24 @@ class HealthStore {
   final List<double> _bpmWindow = [];
   static const int _baselineWindowSize = 20;
 
-  static const double _bpmDropAbsolute = 5.0;
-  static const double _movementLowThreshold = 2.0;
+  static const Duration _minApneaDuration = Duration(seconds: 1);
+  static const Duration _maxApneaDuration = Duration(seconds: 30);
 
-  static const Duration _minApneaDuration =
-  Duration(seconds: 1);
-  static const Duration _maxApneaDuration =
-  Duration(seconds: 30);
+  /// (del suyo) Permite ajustar umbrales desde UI/Settings sin tocar la lógica
+  void setApneaThresholds({
+    required double bpmDrop,
+    required double movement,
+  }) {
+    _state.bpmDropThreshold = bpmDrop;
+    _state.movementThreshold = movement;
+    _ctrl.add(_state);
+  }
 
   void _onPacket(pkt) {
-    if (pkt.pulseSamples.isEmpty) {
-      return;
-    }
+    if (pkt.pulseSamples.isEmpty) return;
 
     final bpm = pkt.pulseSamples.last.bpm;
-    if (bpm == null || bpm <= 0) {
-      return;
-    }
+    if (bpm == null || bpm <= 0) return;
 
     _state.avgBpm = bpm;
     _updateBaseline(bpm);
@@ -67,9 +66,7 @@ class HealthStore {
 
   void _onImuState(ImuState imuState) {
     final s = imuState.lastSample;
-    if (s == null) {
-      return;
-    }
+    if (s == null) return;
 
     if (_lastImu != null) {
       final dx = (s.axMs2 - _lastImu!.axMs2).abs();
@@ -78,8 +75,7 @@ class HealthStore {
 
       final movement = dx + dy + dz;
 
-      _state.movementIndex =
-          (_state.movementIndex * 0.8) + (movement * 0.2);
+      _state.movementIndex = (_state.movementIndex * 0.8) + (movement * 0.2);
 
       _detectApnea();
       _recalculateSleepScore();
@@ -96,23 +92,18 @@ class HealthStore {
     }
 
     _baselineBpm =
-        _bpmWindow.reduce((a, b) => a + b) /
-            _bpmWindow.length;
+        _bpmWindow.reduce((a, b) => a + b) / _bpmWindow.length;
   }
 
   void _detectApnea() {
-    if (_baselineBpm == 0) {
-      return;
-    }
+    if (_baselineBpm == 0) return;
 
     final now = DateTime.now();
     final bpm = _state.avgBpm;
 
-    final lowMovement =
-        _state.movementIndex < _movementLowThreshold;
-
-    final bpmDrop =
-        (_baselineBpm - bpm) >= _bpmDropAbsolute;
+    // thresholds configurables (del suyo)
+    final lowMovement = _state.movementIndex < _state.movementThreshold;
+    final bpmDrop = (_baselineBpm - bpm) >= _state.bpmDropThreshold;
 
     final apneaCondition = bpmDrop || lowMovement;
 
@@ -130,8 +121,7 @@ class HealthStore {
         _minBpm = bpm < _minBpm ? bpm : _minBpm;
         _maxBpm = bpm > _maxBpm ? bpm : _maxBpm;
 
-        final duration =
-        now.difference(_apneaStart!);
+        final duration = now.difference(_apneaStart!);
 
         if (!apneaCondition) {
           if (duration >= _minApneaDuration &&
@@ -154,8 +144,7 @@ class HealthStore {
 
     _state.apneas.add(event);
     _state.apneaCount = _state.apneas.length;
-    _state.apneaProbability =
-        (_state.apneaCount / 5).clamp(0, 1);
+    _state.apneaProbability = (_state.apneaCount / 5).clamp(0, 1);
   }
 
   void _resetApnea() {

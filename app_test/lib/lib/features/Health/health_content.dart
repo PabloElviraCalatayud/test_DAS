@@ -34,15 +34,21 @@ class _HealthContentState extends State<HealthContent> {
 
     _healthSub = widget.healthStore.stream.listen((_) {
       final avgBpm = widget.healthStore.state.avgBpm;
+      final correctedBpm = avgBpm > 0 ? (avgBpm + widget.pulseStore.bpmOffset) : 0.0;
 
-      if (avgBpm > 0) {
+      if (correctedBpm > 0) {
         _history.add(
           PulseSample(
             raw: 0,
             timestampMs: DateTime.now().millisecondsSinceEpoch,
-            bpm: avgBpm,
+            bpm: correctedBpm,
           ),
         );
+
+        // opcional: evita crecimiento infinito del historial
+        if (_history.length > 600) {
+          _history.removeRange(0, _history.length - 600);
+        }
       }
 
       if (mounted) setState(() {});
@@ -59,16 +65,22 @@ class _HealthContentState extends State<HealthContent> {
   Widget build(BuildContext context) {
     final HealthState healthState = widget.healthStore.state;
 
+    final double correctedBpm =
+    healthState.avgBpm == 0 ? 0.0 : (healthState.avgBpm + widget.pulseStore.bpmOffset);
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         HealthCard(
           title: 'Pulso cardíaco',
-          value: healthState.avgBpm == 0
-              ? '—'
-              : '${healthState.avgBpm.round()} BPM',
-          subtitle: _pulseLabel(healthState.avgBpm),
+          value: correctedBpm == 0 ? '—' : '${correctedBpm.round()} BPM',
+          subtitle: _pulseLabel(correctedBpm),
           icon: Icons.favorite,
+          trailing: _calibrationChip(
+            context,
+            '±${widget.pulseStore.bpmOffset.round()} BPM',
+          ),
+          onTap: _calibratePulse,
         ),
         const SizedBox(height: 16),
 
@@ -77,6 +89,21 @@ class _HealthContentState extends State<HealthContent> {
           value: '${healthState.apneaCount}',
           subtitle: _apneaLabel(healthState.apneaCount),
           icon: Icons.air,
+          trailing: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              _calibrationChip(
+                context,
+                'ΔBPM ${healthState.bpmDropThreshold.round()}',
+              ),
+              const SizedBox(height: 4),
+              _calibrationChip(
+                context,
+                'Mov ${healthState.movementThreshold.toStringAsFixed(1)}',
+              ),
+            ],
+          ),
+          onTap: _calibrateApnea,
         ),
         const SizedBox(height: 16),
 
@@ -90,6 +117,121 @@ class _HealthContentState extends State<HealthContent> {
           movementIndex: healthState.movementIndex,
         ),
       ],
+    );
+  }
+
+  Widget _calibrationChip(BuildContext context, String text) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Chip(
+      label: Text(
+        text,
+        style: Theme.of(context).textTheme.bodySmall,
+      ),
+      backgroundColor: scheme.primary.withOpacity(0.12),
+      labelStyle: TextStyle(
+        color: scheme.primary,
+        fontWeight: FontWeight.w600,
+      ),
+      visualDensity: VisualDensity.compact,
+    );
+  }
+
+  void _calibratePulse() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        double offset = widget.pulseStore.bpmOffset;
+
+        return StatefulBuilder(
+          builder: (context, setLocalState) {
+            return AlertDialog(
+              title: const Text('Calibrar pulso'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Offset: ${offset.round()} BPM',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  Slider(
+                    min: -100,
+                    max: 100,
+                    divisions: 200,
+                    value: offset,
+                    label: offset.round().toString(),
+                    onChanged: (v) {
+                      setLocalState(() => offset = v);
+                      widget.pulseStore.setBpmOffset(v);
+                      if (mounted) setState(() {}); // refresca chips/valor al vuelo
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _calibrateApnea() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        double bpmDrop = widget.healthStore.state.bpmDropThreshold;
+        double movement = widget.healthStore.state.movementThreshold;
+
+        return StatefulBuilder(
+          builder: (context, setLocalState) {
+            return AlertDialog(
+              title: const Text('Calibrar apnea'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Caída de BPM: ${bpmDrop.round()}',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  Slider(
+                    min: 1,
+                    max: 15,
+                    divisions: 14,
+                    value: bpmDrop,
+                    label: bpmDrop.round().toString(),
+                    onChanged: (v) {
+                      setLocalState(() => bpmDrop = v);
+                      widget.healthStore.setApneaThresholds(
+                        bpmDrop: bpmDrop,
+                        movement: movement,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Movimiento: ${movement.toStringAsFixed(1)}',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  Slider(
+                    min: 0.5,
+                    max: 10,
+                    divisions: 19,
+                    value: movement,
+                    label: movement.toStringAsFixed(1),
+                    onChanged: (v) {
+                      setLocalState(() => movement = v);
+                      widget.healthStore.setApneaThresholds(
+                        bpmDrop: bpmDrop,
+                        movement: movement,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

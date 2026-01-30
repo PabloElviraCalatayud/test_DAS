@@ -2,17 +2,27 @@
 #include "esp_log.h"
 #include <string.h>
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 #define TAG "ADC_DRV"
 #define FRAME_SIZE 1024
 
 // 0 = average, 1 = peak
+#ifndef ADC_USE_PEAK
 #define ADC_USE_PEAK 0
+#endif
 
 static const adc_channel_t adc_channels[] = {
   ADC_CHANNEL_0,
 };
 
 esp_err_t adc_driver_init(adc_continuous_handle_t *out_handle) {
+  if (!out_handle) {
+    ESP_LOGE(TAG, "out_handle is NULL");
+    return ESP_ERR_INVALID_ARG;
+  }
+
   adc_continuous_handle_cfg_t handle_cfg = {
     .max_store_buf_size = 1024,
     .conv_frame_size = 256,
@@ -26,6 +36,7 @@ esp_err_t adc_driver_init(adc_continuous_handle_t *out_handle) {
   }
 
   adc_digi_pattern_config_t pattern[1];
+  memset(pattern, 0, sizeof(pattern));
   pattern[0].atten = ADC_ATTEN_DB_12;
   pattern[0].channel = adc_channels[0];
   pattern[0].unit = ADC_UNIT_1;
@@ -54,6 +65,7 @@ esp_err_t adc_driver_init(adc_continuous_handle_t *out_handle) {
   }
 
   *out_handle = handle;
+  ESP_LOGI(TAG, "ADC initialized");
   return ESP_OK;
 }
 
@@ -61,6 +73,10 @@ int adc_driver_read_multi(adc_continuous_handle_t handle,
                           adc_channel_result_t *results,
                           int num_channels) {
   (void)num_channels;
+
+  if (!handle || !results) {
+    return 0;
+  }
 
   uint8_t buffer[FRAME_SIZE];
   uint32_t out_len = 0;
@@ -74,7 +90,8 @@ int adc_driver_read_multi(adc_continuous_handle_t handle,
   uint16_t peak = 0;
   uint32_t count = 0;
 
-  for (uint32_t i = 0; i + sizeof(adc_digi_output_data_t) <= out_len; i += sizeof(adc_digi_output_data_t)) {
+  for (uint32_t i = 0; i + sizeof(adc_digi_output_data_t) <= out_len;
+       i += sizeof(adc_digi_output_data_t)) {
     adc_digi_output_data_t sample;
     memcpy(&sample, &buffer[i], sizeof(sample));
     uint16_t v = sample.type1.data;
@@ -88,7 +105,8 @@ int adc_driver_read_multi(adc_continuous_handle_t handle,
   uint64_t sum = 0;
   uint32_t count = 0;
 
-  for (uint32_t i = 0; i + sizeof(adc_digi_output_data_t) <= out_len; i += sizeof(adc_digi_output_data_t)) {
+  for (uint32_t i = 0; i + sizeof(adc_digi_output_data_t) <= out_len;
+       i += sizeof(adc_digi_output_data_t)) {
     adc_digi_output_data_t sample;
     memcpy(&sample, &buffer[i], sizeof(sample));
     sum += sample.type1.data;
@@ -106,6 +124,7 @@ void adc_driver_deinit(adc_continuous_handle_t handle) {
     return;
   }
 
+  // Mejor práctica: parar antes de deinit (tu versión)
   esp_err_t ret = adc_continuous_stop(handle);
   if (ret != ESP_OK) {
     ESP_LOGW(TAG, "adc_continuous_stop: %s", esp_err_to_name(ret));

@@ -17,7 +17,7 @@
 /* =========================================================
  *  CONFIGURACIÓN DE MODO
  * ========================================================= */
-#define SENSOR_SIMULATION_MODE  0   // 1 = simulación, 0 = sensores reales
+#define SENSOR_SIMULATION_MODE  0  /*  1 = simulación, 0 = sensores reales */
 #define OTA_ENABLED             1   // 1 = habilitar OTA, 0 = deshabilitar OTA
 
 static const char *TAG = "MAIN";

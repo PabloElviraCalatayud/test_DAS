@@ -17,7 +17,18 @@ class PulseStore {
 
   static const int _maxSamples = 2000;
 
+  double _bpmOffset = 0.0;
+
+  void setBpmOffset(double offset) {
+    _bpmOffset = offset;
+  }
+
+  double get bpmOffset => _bpmOffset;
+
   void addSample(PulseSample sample) {
+    final double? bpm = sample.bpm as double?;
+    final double? correctedBpm = bpm == null ? null : (bpm + _bpmOffset);
+
     final history = List<PulseSample>.from(_state.history)..add(sample);
 
     if (history.length > _maxSamples) {
@@ -25,7 +36,7 @@ class PulseStore {
     }
 
     _state = _state.copyWith(
-      heartRate: sample.bpm?.round(),
+      heartRate: correctedBpm?.round(),
       totalSamples: _state.totalSamples + 1,
       history: history,
     );

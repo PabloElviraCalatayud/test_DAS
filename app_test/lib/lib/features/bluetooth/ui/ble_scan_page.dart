@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-
 import '../../../core/utils/ble_permissions.dart';
 import '../../../data/bluetooth/manager/ble_manager.dart';
 import 'ota_update_page.dart';
@@ -37,7 +36,7 @@ class BleScanPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: () async{
+                onPressed: () async {
                   final ok = await BlePermissions.ensure();
                   if (!ok) return;
                   ble.scan();
@@ -45,8 +44,8 @@ class BleScanPage extends StatelessWidget {
                 child: const Text('Iniciar escaneo'),
               ),
               ElevatedButton(
-                onPressed: () async{
-                  FlutterBluePlus.stopScan();
+                onPressed: () async {
+                  await FlutterBluePlus.stopScan();
                 },
                 child: const Text('Parar escaneo'),
               ),
@@ -61,7 +60,9 @@ class BleScanPage extends StatelessWidget {
                 final adv = r.advertisementData.advName.trim();
                 final plat = r.device.platformName.trim();
                 final name = adv.isNotEmpty ? adv : plat;
-                return name.toUpperCase().startsWith('ESP');
+                return name.isNotEmpty && name.toUpperCase().startsWith('ESP');
+                // si quieres DAS:
+                // return name.isNotEmpty && name.toUpperCase().startsWith('DAS');
               }).toList();
 
               if (results.isEmpty) {
@@ -72,10 +73,12 @@ class BleScanPage extends StatelessWidget {
 
               return ListView(
                 children: results.map((r) {
-                  final advName = r.advertisementData.advName;
+                  final advName = r.advertisementData.advName.trim();
                   final name = advName.isNotEmpty
                       ? advName
-                      : r.device.remoteId.str;
+                      : (r.device.platformName.isNotEmpty
+                      ? r.device.platformName
+                      : r.device.remoteId.str);
 
                   return ListTile(
                     leading: const Icon(Icons.bluetooth),
@@ -131,9 +134,7 @@ class BleScanPage extends StatelessWidget {
           const SizedBox(height: 12),
           OutlinedButton(
             onPressed: ble.state == BleConnectionState.connected
-                ? () async {
-              await ble.disconnect();
-            }
+                ? () async => ble.disconnect()
                 : null,
             child: const Text('Desconectar'),
           ),

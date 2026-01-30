@@ -13,8 +13,12 @@ class SleepScoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    final bool hasScore = score != null;
     final int value = score ?? 0;
-    final color = _scoreColor(value);
+
+    final color = hasScore ? _scoreColor(value) : scheme.outlineVariant;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -22,33 +26,43 @@ class SleepScoreCard extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [color.withOpacity(0.1), Colors.white],
+          colors: [
+            color.withOpacity(0.10),
+            scheme.surface, // en vez de Colors.white
+          ],
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withOpacity(0.20)),
       ),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Calidad del Sueño',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text(
+                'Calidad del Sueño',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
+                  color: color.withOpacity(0.20),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  _scoreLabel(value),
-                  style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12),
+                  hasScore ? _scoreLabel(value) : 'Sin datos',
+                  style: TextStyle(
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
                 ),
               )
             ],
           ),
           const SizedBox(height: 20),
-          // Indicador circular grande en lugar de texto plano
+
           Stack(
             alignment: Alignment.center,
             children: [
@@ -56,8 +70,8 @@ class SleepScoreCard extends StatelessWidget {
                 height: 100,
                 width: 100,
                 child: CircularProgressIndicator(
-                  value: value / 100,
-                  backgroundColor: theme.colorScheme.surfaceVariant,
+                  value: hasScore ? (value / 100) : 0, // null -> 0
+                  backgroundColor: scheme.surfaceVariant,
                   color: color,
                   strokeWidth: 10,
                   strokeCap: StrokeCap.round,
@@ -67,18 +81,22 @@ class SleepScoreCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    value.toString(),
+                    hasScore ? value.toString() : '—',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.w800,
-                      color: theme.colorScheme.onSurface,
+                      color: scheme.onSurface,
                     ),
                   ),
-                  const Text('puntos', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                  const Text(
+                    'puntos',
+                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                  ),
                 ],
               )
             ],
           ),
+
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -97,9 +115,9 @@ class SleepScoreCard extends StatelessWidget {
   }
 
   Color _scoreColor(int score) {
-    if (score >= 80) return const Color(0xFF00BFA5); // Teal
-    if (score >= 50) return const Color(0xFFFFA000); // Amber
-    return const Color(0xFFFF5252); // Red
+    if (score >= 80) return const Color(0xFF00BFA5);
+    if (score >= 50) return const Color(0xFFFFA000);
+    return const Color(0xFFFF5252);
   }
 
   String _scoreLabel(int score) {

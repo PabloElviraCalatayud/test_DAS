@@ -8,15 +8,25 @@ class BpmHistoryChart extends StatelessWidget {
 
   const BpmHistoryChart({super.key, required this.samples});
 
+  static const double _minBpmChart = 40;
+  static const double _maxBpmChart = 190;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    // Si bpm es nullable, filtramos.
+    final valid = samples.where((s) {
+      final bpm = s.bpm;
+      return bpm != null && bpm > 0;
+    }).toList();
+
+    final lastBpmText = valid.isNotEmpty ? '${valid.last.bpm!.round()} BPM' : '--';
 
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        // Sombra suave difusa
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF2B5C9E).withOpacity(0.08),
@@ -35,12 +45,22 @@ class BpmHistoryChart extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Frecuencia Cardíaca',
-                      style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Frecuencia Cardíaca',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   Text(
-                    samples.isNotEmpty ? '${samples.last.bpm.round()} BPM' : '--',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF2B5C9E)),
+                    lastBpmText,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2B5C9E),
+                    ),
                   ),
                 ],
               ),
@@ -57,28 +77,51 @@ class BpmHistoryChart extends StatelessWidget {
           const SizedBox(height: 24),
           SizedBox(
             height: 180,
-            child: samples.isEmpty
-                ? const Center(child: Text('Esperando datos...', style: TextStyle(color: Colors.grey)))
-                : LineChart(_chartData(theme)),
+            child: valid.isEmpty
+                ? const Center(
+              child: Text(
+                'Esperando datos...',
+                style: TextStyle(color: Colors.grey),
+              ),
+            )
+                : LineChart(_chartData(theme, valid)),
           ),
         ],
       ),
     );
   }
 
-  LineChartData _chartData(ThemeData theme) {
-    // ... (Tu lógica de cálculo de spots se mantiene igual) ...
-    final spots = samples.map((s) => FlSpot(s.timestampMs / 1000.0, s.bpm.toDouble())).toList();
+  LineChartData _chartData(ThemeData theme, List<PulseSample> valid) {
+    final spots = <FlSpot>[];
+
+    for (final s in valid) {
+      final bpm = s.bpm!;
+      spots.add(
+        FlSpot(
+          s.timestampMs / 1000.0,
+          bpm.clamp(_minBpmChart, _maxBpmChart).toDouble(),
+        ),
+      );
+    }
+
     if (spots.isEmpty) return LineChartData();
 
-    final double minX = spots.first.x;
-    final double maxX = spots.last.x;
+    double minX = spots.first.x;
+    double maxX = spots.last.x;
+
+    // Evita span 0 cuando solo hay 1 punto
+    if (maxX <= minX) {
+      maxX = minX + 1;
+    }
+
+    final span = maxX - minX;
+    final xInterval = _computeTimeInterval(span);
 
     return LineChartData(
       minX: minX,
       maxX: maxX,
-      minY: 40,
-      maxY: 180, // Ajuste fijo para estética
+      minY: _minBpmChart,
+      maxY: _maxBpmChart,
       gridData: FlGridData(
         show: true,
         drawVerticalLine: false,
@@ -86,18 +129,36 @@ class BpmHistoryChart extends StatelessWidget {
         getDrawingHorizontalLine: (value) => FlLine(
           color: Colors.grey.withOpacity(0.1),
           strokeWidth: 1,
-          dashArray: [5, 5], // Línea punteada
+          dashArray: [5, 5], // si tu versión de fl_chart no lo soporta, quítalo
         ),
       ),
-      borderData: FlBorderData(show: false), // Sin bordes feos alrededor
+      borderData: FlBorderData(show: false),
+      lineTouchData: LineTouchData(
+        enabled: true,
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipItems: (touchedSpots) {
+            return touchedSpots.map((spot) {
+              final time = DateTime.fromMillisecondsSinceEpoch((spot.x * 1000).toInt());
+              return LineTooltipItem(
+                '${spot.y.toInt()} BPM\n${DateFormat('HH:mm:ss').format(time)}',
+                const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11,
+                ),
+              );
+            }).toList();
+          },
+        ),
+      ),
       titlesData: FlTitlesData(
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)), // Limpio, sin eje Y visible
+        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: (maxX - minX) / 4, // Mostrar ~4 etiquetas
+            interval: xInterval,
             getTitlesWidget: (value, meta) {
               final time = DateTime.fromMillisecondsSinceEpoch((value * 1000).toInt());
               return Padding(
@@ -134,5 +195,13 @@ class BpmHistoryChart extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  double _computeTimeInterval(double spanSeconds) {
+    if (spanSeconds <= 60) return 10;
+    if (spanSeconds <= 5 * 60) return 30;
+    if (spanSeconds <= 15 * 60) return 60;
+    if (spanSeconds <= 60 * 60) return 5 * 60;
+    return 15 * 60;
   }
 }

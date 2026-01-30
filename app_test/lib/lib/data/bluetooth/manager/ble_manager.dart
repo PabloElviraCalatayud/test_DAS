@@ -4,9 +4,9 @@ import 'dart:typed_data';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import '../../../core/constants/ble_constants.dart';
-import '../../../features/packet/logic/packet_decoder.dart';
-import '../../../features/ota/ota_sender.dart';
 import '../../../core/utils/ble_foreground.dart';
+import '../../../features/ota/ota_sender.dart';
+import '../../../features/packet/logic/packet_decoder.dart';
 
 enum BleConnectionState {
   idle,
@@ -15,15 +15,8 @@ enum BleConnectionState {
   connected,
 }
 
-StreamSubscription<BluetoothConnectionState>? _connSub;
-StreamSubscription<List<int>>? _notifySub;
-
-bool _autoReconnect = true;
-int _reconnectAttempt = 0;
-
 class BleManager {
   BleManager._internal();
-
   static final BleManager instance = BleManager._internal();
 
   BluetoothDevice? connectedDevice;
@@ -31,7 +24,6 @@ class BleManager {
   BluetoothCharacteristic? _writeChar;
 
   BluetoothCharacteristic? get writeChar => _writeChar;
-
   BluetoothCharacteristic? get notifyChar => _notifyChar;
 
   BleConnectionState _state = BleConnectionState.idle;
@@ -39,10 +31,27 @@ class BleManager {
   StreamController.broadcast();
 
   Stream<BleConnectionState> get stateStream => _stateCtrl.stream;
-
   BleConnectionState get state => _state;
 
   bool _otaActive = false;
+
+  // --- Reconnect control (tu versión) ---
+  bool _autoReconnect = true;
+  int _reconnectAttempt = 0;
+  bool _reconnecting = false;
+
+  StreamSubscription<BluetoothConnectionState>? _connSub;
+  StreamSubscription<List<int>>? _notifySub;
+
+  // --- Scan filter (su versión) ---
+  Stream<List<ScanResult>> get dasScanResults {
+    return FlutterBluePlus.scanResults.map((results) {
+      return results.where((r) {
+        final name = r.device.name;
+        return name.isNotEmpty && name.startsWith('DAS');
+      }).toList();
+    });
+  }
 
   void _setState(BleConnectionState s) {
     _state = s;
@@ -65,13 +74,27 @@ class BleManager {
       return;
     }
 
+    _autoReconnect = true;
+    _reconnectAttempt = 0;
+    _reconnecting = false;
+
     _setState(BleConnectionState.connecting);
     FlutterBluePlus.stopScan();
+
+    // limpieza previa
+    await _notifySub?.cancel();
+    _notifySub = null;
+    await _connSub?.cancel();
+    _connSub = null;
 
     try {
       await device.disconnect();
     } catch (_) {}
-    //try { await device.removeBond(); } catch (_) {}
+
+    // opcional (su versión). En iOS suele no aplicar.
+    try {
+      await device.removeBond();
+    } catch (_) {}
 
     await device.connect(
       autoConnect: false,
@@ -84,10 +107,14 @@ class BleManager {
 
     connectedDevice = device;
 
-    _connSub?.cancel();
+    // Listener para auto-reconnect (tu versión)
     _connSub = device.connectionState.listen((s) {
       if (s == BluetoothConnectionState.disconnected) {
         _setState(BleConnectionState.idle);
+
+        // corta foreground al perder conexión
+        BleForeground.stop();
+
         if (_autoReconnect && connectedDevice != null) {
           _reconnect();
         }
@@ -103,7 +130,13 @@ class BleManager {
   }
 
   Future<void> _discoverCharacteristics() async {
-    final services = await connectedDevice!.discoverServices();
+    final dev = connectedDevice;
+    if (dev == null) throw Exception('Device is null');
+
+    final services = await dev.discoverServices();
+
+    _notifyChar = null;
+    _writeChar = null;
 
     for (final s in services) {
       if (s.uuid.toString().toLowerCase() !=
@@ -116,9 +149,7 @@ class BleManager {
 
         if (uuid == BleConstants.txCharUuid.toLowerCase()) {
           _notifyChar = c;
-        }
-
-        if (uuid == BleConstants.rxCharUuid.toLowerCase()) {
+        } else if (uuid == BleConstants.rxCharUuid.toLowerCase()) {
           _writeChar = c;
         }
       }
@@ -129,9 +160,13 @@ class BleManager {
     }
 
     await _notifyChar!.setNotifyValue(true);
+
     await _notifySub?.cancel();
     _notifySub = _notifyChar!.lastValueStream.listen((data) {
+      // debug opcional (tu versión)
+      // ignore: avoid_print
       print('[BLE] notify len=${data.length} first=${data.isNotEmpty ? data[0] : -1}');
+
       final bytes = Uint8List.fromList(data);
 
       if (_otaActive) {
@@ -151,13 +186,18 @@ class BleManager {
   }
 
   Future<void> disconnect() async {
+    // desconexión manual: corta auto-reconnect (tu versión)
     _autoReconnect = false;
+    _reconnecting = false;
+    _reconnectAttempt = 0;
+
     await _notifySub?.cancel();
     _notifySub = null;
     await _connSub?.cancel();
     _connSub = null;
 
-    if (connectedDevice == null) {
+    final dev = connectedDevice;
+    if (dev == null) {
       _setState(BleConnectionState.idle);
       await BleForeground.stop();
       return;
@@ -168,7 +208,7 @@ class BleManager {
     } catch (_) {}
 
     try {
-      await connectedDevice!.disconnect();
+      await dev.disconnect();
     } catch (_) {}
 
     connectedDevice = null;
@@ -178,37 +218,51 @@ class BleManager {
 
     await BleForeground.stop();
     _setState(BleConnectionState.idle);
-    _autoReconnect = true;
-    _reconnectAttempt = 0;
+
+    // si luego el usuario conecta manualmente, connect() vuelve a poner autoReconnect=true
   }
 
-
   Future<void> _reconnect() async {
-    final dev = connectedDevice;
-    if (dev == null) return;
-
-    _reconnectAttempt++;
-    final delaySeconds = [1, 2, 5, 10, 20, 30]
-        .elementAt((_reconnectAttempt - 1).clamp(0, 5));
-    await Future.delayed(Duration(seconds: delaySeconds));
+    if (_reconnecting) return;
+    _reconnecting = true;
 
     try {
-      _setState(BleConnectionState.connecting);
-      await dev.connect(
-          autoConnect: false, timeout: const Duration(seconds: 15));
-      await dev.connectionState.firstWhere(
-            (s) => s == BluetoothConnectionState.connected,
-      );
+      while (_autoReconnect && connectedDevice != null) {
+        final dev = connectedDevice!;
+        _reconnectAttempt++;
 
-      _reconnectAttempt = 0;
-      await dev.requestMtu(247);
-      await _discoverCharacteristics();
-      _setState(BleConnectionState.connected);
-    } catch (_) {
-      // sigue intentando mientras el usuario no desconecte manualmente
-      if (_autoReconnect && connectedDevice != null) {
-        _reconnect();
+        final delaySeconds = [1, 2, 5, 10, 20, 30]
+            .elementAt((_reconnectAttempt - 1).clamp(0, 5));
+        await Future.delayed(Duration(seconds: delaySeconds));
+
+        if (!_autoReconnect || connectedDevice == null) break;
+
+        try {
+          _setState(BleConnectionState.connecting);
+
+          await dev.connect(
+            autoConnect: false,
+            timeout: const Duration(seconds: 15),
+          );
+
+          await dev.connectionState.firstWhere(
+                (s) => s == BluetoothConnectionState.connected,
+          );
+
+          _reconnectAttempt = 0;
+
+          await dev.requestMtu(247);
+          await _discoverCharacteristics();
+          await BleForeground.start();
+
+          _setState(BleConnectionState.connected);
+          break; // reconectado OK
+        } catch (_) {
+          // sigue el bucle y reintenta
+        }
       }
+    } finally {
+      _reconnecting = false;
     }
   }
 }

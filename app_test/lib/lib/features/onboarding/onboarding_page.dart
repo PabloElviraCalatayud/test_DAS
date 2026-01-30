@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../app/app_shell.dart';
 import '../../core/utils/onboarding_storage.dart';
-import '../../shared/widgets/buttons/primary_button.dart';
-import 'onboarding_content.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -27,8 +25,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     {
       "image": "assets/illustrations/heart.svg",
       "title": "Monitorea tu pulso y O2",
-      "description":
-      "Visualiza en tiempo real tus pulsaciones y oxígeno en sangre",
+      "description": "Visualiza en tiempo real tus pulsaciones y oxígeno en sangre",
     },
     {
       "image": "assets/illustrations/moon.svg",
@@ -40,13 +37,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Future<void> _finishOnboarding() async {
     await OnboardingStorage.setSeen();
-
     if (!mounted) return;
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => const AppShell(),
-      ),
+      MaterialPageRoute(builder: (_) => const AppShell()),
     );
   }
 
@@ -70,8 +64,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
     }
   }
 
-  void _skip() {
-    _finishOnboarding();
+  void _skip() => _finishOnboarding();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -83,14 +81,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Botón Saltar minimalista
+            // Botón Saltar
             Align(
               alignment: Alignment.topRight,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextButton(
                   onPressed: _skip,
-                  child: Text("Saltar", style: TextStyle(color: theme.colorScheme.primary)),
+                  child: Text(
+                    "Saltar",
+                    style: TextStyle(color: theme.colorScheme.primary),
+                  ),
                 ),
               ),
             ),
@@ -104,12 +105,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
               ),
             ),
 
-            // Indicadores y Botones
             Padding(
               padding: const EdgeInsets.all(32.0),
               child: Column(
                 children: [
-                  // Indicador de página (Puntos)
+                  // Indicadores
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
@@ -120,28 +120,62 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         height: 6,
                         width: _currentPage == index ? 24 : 6,
                         decoration: BoxDecoration(
-                          color: _currentPage == index ? theme.colorScheme.primary : const Color(0xFFE0E0E0),
+                          color: _currentPage == index
+                              ? theme.colorScheme.primary
+                              : const Color(0xFFE0E0E0),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
-                  // Botón Principal Grande
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: FilledButton(
-                      style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        backgroundColor: theme.colorScheme.primary,
+                  const SizedBox(height: 24),
+
+                  // Botones Atrás / Siguiente
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 56,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              side: BorderSide(color: theme.colorScheme.primary),
+                            ),
+                            onPressed: _currentPage == 0 ? null : _previousPage,
+                            child: const Text(
+                              "Atrás",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ),
                       ),
-                      onPressed: _nextPage,
-                      child: Text(
-                        _currentPage == onboardingData.length - 1 ? "Comenzar" : "Siguiente",
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: SizedBox(
+                          height: 56,
+                          child: FilledButton(
+                            style: FilledButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              backgroundColor: theme.colorScheme.primary,
+                            ),
+                            onPressed: _nextPage,
+                            child: Text(
+                              _currentPage == onboardingData.length - 1
+                                  ? "Comenzar"
+                                  : "Siguiente",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -160,7 +194,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         children: [
           SvgPicture.asset(
             data["image"]!,
-            height: 280, // Imagen más grande
+            height: 280,
           ),
           const SizedBox(height: 40),
           Text(
